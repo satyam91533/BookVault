@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Seller Dashboard</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            background:#0f172a;
+            color:white;
+            font-family:Arial, sans-serif;
+            display:flex;
+        }
+
+        .sidebar{
+            width:260px;
+            background:#111827;
+            min-height:100vh;
+            padding:30px 20px;
+            position:sticky;
+            top:0;
+        }
+
+        .sidebar h2{
+            color:#f59e0b;
+            margin-bottom:40px;
+            text-align:center;
+        }
+
+        .sidebar a{
+            display:block;
+            color:white;
+            text-decoration:none;
+            padding:14px 18px;
+            background:#1e293b;
+            margin-bottom:15px;
+            border-radius:10px;
+            transition:0.3s;
+        }
+
+        .sidebar a:hover{
+            background:#334155;
+        }
+
+        .main{
+            flex:1;
+            padding:40px;
+        }
+
+        .top{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:20px;
+        }
+
+        .cards{
+            margin-top:40px;
+            display:grid;
+            grid-template-columns:
+            repeat(auto-fit, minmax(220px,1fr));
+            gap:25px;
+        }
+
+        .card{
+            background:#1e293b;
+            padding:30px;
+            border-radius:15px;
+        }
+
+        .card h3{
+            color:#cbd5e1;
+            margin-bottom:15px;
+        }
+
+        .card p{
+            font-size:35px;
+            font-weight:bold;
+            color:#22c55e;
+        }
+
+        .section{
+            margin-top:50px;
+            background:#1e293b;
+            padding:30px;
+            border-radius:15px;
+        }
+
+        .section h2{
+            margin-bottom:25px;
+            color:#f59e0b;
+        }
+
+        form input,
+        form textarea{
+            width:100%;
+            padding:14px;
+            margin-bottom:15px;
+            border:none;
+            border-radius:10px;
+            background:#0f172a;
+            color:white;
+        }
+
+        form button{
+            background:#22c55e;
+            color:white;
+            border:none;
+            padding:14px 25px;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:bold;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+
+        table th,
+        table td{
+            padding:15px;
+            border-bottom:1px solid #334155;
+            text-align:left;
+        }
+
+        table th{
+            color:#f59e0b;
+        }
+
+        .edit-btn{
+            background:#3b82f6;
+            color:white;
+            padding:8px 14px;
+            border-radius:8px;
+            text-decoration:none;
+        }
+
+        .delete-btn{
+            background:#ef4444;
+            color:white;
+            padding:8px 14px;
+            border-radius:8px;
+            text-decoration:none;
+        }
+
+        @media(max-width:900px){
+
+            body{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                width:100%;
+                min-height:auto;
+                position:relative;
+            }
+
+            .main{
+                padding:20px;
+            }
+
+            table{
+                display:block;
+                overflow-x:auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+        <h2>
+            Seller Panel
+        </h2>
+
+        <a href="/seller-dashboard/">
+            Dashboard
+        </a>
+
+        <a href="#upload">
+            Upload Book
+        </a>
+
+        <a href="#books">
+            My Books
+        </a>
+
+        <a href="#sales">
+            Recent Sales
+        </a>
+
+        <a href="#withdrawals">
+            Withdrawals
+        </a>
+
+        <a href="/logout/">
+            Logout
+        </a>
+
+    </div>
+
+    <div class="main">
+
+        <div class="top">
+
+            <div style="
+            display:flex;
+            align-items:center;
+            gap:20px;
+            flex-wrap:wrap;
+            ">
+
+                {% if seller.profile_photo %}
+
+                <img src="{{ seller.profile_photo.url }}"
+                     style="
+                     width:90px;
+                     height:90px;
+                     border-radius:50%;
+                     object-fit:cover;
+                     border:4px solid #22c55e;
+                     ">
+
+                {% else %}
+
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                     style="
+                     width:90px;
+                     height:90px;
+                     border-radius:50%;
+                     border:4px solid #22c55e;
+                     ">
+
+                {% endif %}
+
+                <div>
+
+                    <h1 style="
+                    color:#f59e0b;
+                    margin-bottom:10px;
+                    ">
+                        Welcome,
+                        {{ seller.full_name }}
+                    </h1>
+
+                    <p style="
+                    color:#cbd5e1;
+                    ">
+                        📧 {{ seller.email }}
+                    </p>
+
+                    <p style="
+                    color:#cbd5e1;
+                    margin-top:5px;
+                    ">
+                        👤 {{ seller.username }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h3>
+                    Total Books
+                </h3>
+
+                <p>
+                    {{ total_books }}
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>
+                    Total Sales
+                </h3>
+
+                <p>
+                    {{ total_sales }}
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>
+                    Earnings
+                </h3>
+
+                <p>
+                    ₹{{ earnings }}
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>
+                    Wallet Balance
+                </h3>
+
+                <p>
+                    ₹{{ seller.wallet_balance }}
+                </p>
+
+                <form method="POST"
+                      style="margin-top:20px;">
+
+                    {% csrf_token %}
+
+                    <input type="text"
+                           name="upi_id"
+                           placeholder="Enter UPI ID"
+                           value="{{ seller.upi_id }}">
+
+                    <button type="submit">
+                        Save UPI
+                    </button>
+
+                </form>
+
+                <form method="POST"
+                      style="margin-top:15px;">
+
+                    {% csrf_token %}
+
+                    <input type="number"
+                           name="withdraw_amount"
+                           placeholder="Withdraw Amount"
+                           required>
+
+                    <button type="submit">
+                        Request Withdraw
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <!-- UPLOAD SECTION -->
+
+        <div class="section"
+             id="upload">
+
+            <h2>
+                Upload New Book
+            </h2>
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <input type="hidden"
+                       name="upload_book"
+                       value="1">
+
+                <input type="text"
+                       name="title"
+                       placeholder="Book Title"
+                       required>
+
+                <input type="text"
+                       name="category"
+                       placeholder="Category"
+                       required>
+
+                <input type="number"
+                       name="price"
+                       placeholder="Price"
+                       required>
+
+                <textarea
+                    name="description"
+                    placeholder="Description"
+                    rows="5"
+                    required></textarea>
+
+                <input type="file"
+                       name="pdf_file"
+                       required>
+
+                <input type="file"
+                       name="cover_image"
+                       required>
+
+                <button type="submit">
+                    Upload Book
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- MY BOOKS -->
+
+        <div class="section"
+             id="books">
+
+            <h2>
+                My Books
+            </h2>
+
+            <table>
+
+                <tr>
+
+                    <th>Title</th>
+
+                    <th>Category</th>
+
+                    <th>Price</th>
+
+                    <th>Status</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+                {% for book in seller_books %}
+
+                <tr>
+
+                    <td>
+                        {{ book.title }}
+                    </td>
+
+                    <td>
+                        {{ book.category }}
+                    </td>
+
+                    <td>
+                        ₹{{ book.price }}
+                    </td>
+
+                    <td>
+
+                        {% if book.approved %}
+
+                        <span style="color:#22c55e;">
+                            Approved
+                        </span>
+
+                        {% elif book.rejected %}
+
+                        <span style="color:#ef4444;">
+                            Rejected
+                        </span>
+
+                        {% if book.reject_reason %}
+
+                        <br><br>
+
+                        <small style="color:#fca5a5;">
+                            {{ book.reject_reason }}
+                        </small>
+
+                        {% endif %}
+
+                        {% else %}
+
+                        <span style="color:#f59e0b;">
+                            Pending
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <a href="/edit-book/{{ book.id }}/"
+                           class="edit-btn">
+                            Edit
+                        </a>
+
+                        <a href="/delete-book/{{ book.id }}/"
+                           class="delete-btn">
+                            Delete
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+        <!-- SALES -->
+
+        <div class="section"
+             id="sales">
+
+            <h2>
+                Recent Sales
+            </h2>
+
+            <table>
+
+                <tr>
+
+                    <th>Buyer</th>
+
+                    <th>Book</th>
+
+                    <th>Date</th>
+
+                </tr>
+
+                {% for purchase in seller_purchases %}
+
+                <tr>
+
+                    <td>
+                        {{ purchase.buyer.username }}
+                    </td>
+
+                    <td>
+                        {{ purchase.book.title }}
+                    </td>
+
+                    <td>
+                        {{ purchase.purchase_date }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+        <!-- WITHDRAWALS -->
+
+        <div class="section"
+             id="withdrawals">
+
+            <h2>
+                Withdrawal Requests
+            </h2>
+
+            <table>
+
+                <tr>
+
+                    <th>Amount</th>
+
+                    <th>UPI ID</th>
+
+                    <th>Date</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+                {% for withdrawal in withdrawals %}
+
+                <tr>
+
+                    <td>
+                        ₹{{ withdrawal.amount }}
+                    </td>
+
+                    <td>
+                        {{ withdrawal.upi_id }}
+                    </td>
+
+                    <td>
+                        {{ withdrawal.request_date }}
+                    </td>
+
+                    <td>
+
+                        {% if withdrawal.approved %}
+
+                        <span style="
+                        color:#22c55e;
+                        font-weight:bold;
+                        ">
+                            Approved ✅
+                        </span>
+
+                        {% elif withdrawal.rejected %}
+
+                        <span style="
+                        color:#ef4444;
+                        font-weight:bold;
+                        ">
+                            Rejected ❌
+                        </span>
+
+                        {% else %}
+
+                        <span style="
+                        color:#f59e0b;
+                        font-weight:bold;
+                        ">
+                            Pending ⏳
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

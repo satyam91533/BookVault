@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Secure Payment</title>
+
+    <style>
+
+        body{
+            margin:0;
+            background:#0f172a;
+            font-family:Arial, sans-serif;
+            color:white;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+        }
+
+        .payment-container{
+            background:#1e293b;
+            width:450px;
+            padding:40px;
+            border-radius:20px;
+            text-align:center;
+            box-shadow:0 0 30px rgba(0,0,0,0.4);
+        }
+
+        .logo{
+            font-size:35px;
+            color:#f59e0b;
+            font-weight:bold;
+            margin-bottom:20px;
+        }
+
+        .book-image{
+            width:180px;
+            height:240px;
+            object-fit:cover;
+            border-radius:15px;
+            margin-top:15px;
+        }
+
+        h2{
+            margin-top:20px;
+            font-size:28px;
+        }
+
+        .category{
+            color:#cbd5e1;
+            margin-top:8px;
+            font-size:17px;
+        }
+
+        .price{
+            margin-top:20px;
+            font-size:35px;
+            color:#22c55e;
+            font-weight:bold;
+        }
+
+        .offer{
+            margin-top:10px;
+            background:#22c55e;
+            display:inline-block;
+            padding:8px 15px;
+            border-radius:10px;
+            font-size:14px;
+        }
+
+        .qr-box{
+            margin-top:30px;
+            background:white;
+            padding:20px;
+            border-radius:15px;
+        }
+
+        .qr-box img{
+            width:220px;
+        }
+
+        .upi-box{
+            margin-top:20px;
+            background:#334155;
+            padding:15px;
+            border-radius:10px;
+            font-size:20px;
+            font-weight:bold;
+        }
+
+        .note{
+            margin-top:20px;
+            color:#cbd5e1;
+            line-height:1.6;
+        }
+
+        .secure{
+            margin-top:25px;
+            color:#94a3b8;
+            font-size:14px;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            margin-top:10px;
+        }
+
+        .pay-btn{
+            margin-top:30px;
+            padding:16px 35px;
+            background:#22c55e;
+            color:white;
+            border:none;
+            border-radius:12px;
+            font-size:20px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="payment-container">
+
+        <div class="logo">
+            BookVault Payment
+        </div>
+
+        <img src="{{ book.cover_image.url }}"
+             class="book-image">
+
+        <h2>
+            {{ book.title }}
+        </h2>
+
+        <div class="category">
+            Category: {{ book.category }}
+        </div>
+
+        <div class="price">
+            ₹{{ book.price }}
+        </div>
+
+        <div class="offer">
+            🔥 99% OFF
+        </div>
+
+        <!-- ADMIN QR -->
+
+        <div class="qr-box">
+
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data={{ qr_data }}">
+
+        </div>
+
+        <!-- ADMIN UPI -->
+
+        <div class="upi-box">
+            UPI ID: {{ admin_upi }}
+        </div>
+
+        <div class="note">
+            Scan QR using any UPI app like PhonePe,
+            Google Pay, Paytm or BHIM and complete payment.
+        </div>
+
+        <form method="POST"
+              enctype="multipart/form-data"
+              action="/payment-success/{{ book.id }}/">
+
+            {% csrf_token %}
+
+            <br>
+
+            <p>
+                Enter UTR Number
+            </p>
+
+            <input type="text"
+                   name="utr_number"
+                   required>
+
+            <br><br>
+
+            <p>
+                Upload Payment Screenshot
+            </p>
+
+            <input type="file"
+                   name="payment_screenshot"
+                   required>
+
+            <br><br>
+
+            <button type="submit"
+                    class="pay-btn">
+                Submit Payment
+            </button>
+
+        </form>
+
+        <div class="secure">
+            🔒 100% Secure Payment Gateway
+        </div>
+
+    </div>
+
+</body>
+
+</html>

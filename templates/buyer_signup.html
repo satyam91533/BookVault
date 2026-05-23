@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Signup</title>
+
+    <style>
+
+        body{
+            background:#0f172a;
+            font-family:Arial, sans-serif;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+            margin:0;
+        }
+
+        .signup-box{
+            background:#1e293b;
+            padding:40px;
+            border-radius:15px;
+            width:350px;
+        }
+
+        h1{
+            text-align:center;
+            color:#f59e0b;
+            margin-bottom:30px;
+        }
+
+        input{
+            width:100%;
+            padding:15px;
+            margin-bottom:20px;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+        }
+
+        button{
+            width:100%;
+            padding:15px;
+            background:#22c55e;
+            border:none;
+            border-radius:10px;
+            color:white;
+            font-size:18px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="signup-box">
+
+        <h1>Buyer Signup</h1>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <input type="text" name="username" placeholder="Enter Username">
+
+            <input type="email" name="email" placeholder="Enter Email">
+
+            <input type="password" name="password" placeholder="Enter Password">
+
+            <button type="submit">
+                Signup
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

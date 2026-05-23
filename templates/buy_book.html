@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buy Book</title>
+</head>
+<body>
+
+    <h1>{{ book.title }}</h1>
+
+    <img src="{{ book.cover_image.url }}" width="200">
+
+    <p>Price: ₹{{ book.price }}</p>
+
+    <p>{{ book.description }}</p>
+
+    <hr>
+
+    <h2>Pay Using UPI</h2>
+
+    <img src="/media/upi_qr.png" width="250">
+
+    <p>UPI ID: yourupi@oksbi</p>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        <label>Enter UTR Number:</label>
+        <br><br>
+
+        <input type="text" name="utr" required>
+
+        <br><br>
+
+        <label>Upload Payment Screenshot:</label>
+        <br><br>
+
+        <input type="file" name="screenshot" required>
+
+        <br><br>
+
+        <button type="submit">
+            Submit Payment
+        </button>
+
+    </form>
+
+</body>
+</html>

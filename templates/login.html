@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login</title>
+
+    <style>
+
+        body{
+            background:#0f172a;
+            font-family:Arial, sans-serif;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+            margin:0;
+        }
+
+        .login-box{
+            background:#1e293b;
+            padding:40px;
+            border-radius:15px;
+            width:380px;
+        }
+
+        h1{
+            text-align:center;
+            color:#f59e0b;
+            margin-bottom:30px;
+        }
+
+        input{
+            width:100%;
+            padding:15px;
+            margin-bottom:20px;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+            box-sizing:border-box;
+        }
+
+        button{
+            width:100%;
+            padding:15px;
+            background:#22c55e;
+            border:none;
+            border-radius:10px;
+            color:white;
+            font-size:18px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        .signup-links{
+            margin-top:25px;
+            text-align:center;
+        }
+
+        .signup-links a{
+            color:#3b82f6;
+            text-decoration:none;
+            display:block;
+            margin-top:10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="login-box">
+
+        <h1>Login</h1>
+
+        {% if error %}
+
+        <div style="
+        background:red;
+        padding:15px;
+        border-radius:10px;
+        margin-bottom:20px;
+        text-align:center;
+        color:white;
+        ">
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <input type="text"
+                   name="username"
+                   placeholder="Username"
+                   required>
+
+            <input type="password"
+                   name="password"
+                   placeholder="Password"
+                   required>
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <div class="signup-links">
+
+            <a href="/buyer-signup/">
+                Create Buyer Account
+            </a>
+
+            <a href="/seller-signup/">
+                Become Seller
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Buyer Profile</title>
+
+    <style>
+
+        body{
+            margin:0;
+            padding:40px;
+            background:#0f172a;
+            color:white;
+            font-family:Arial, sans-serif;
+        }
+
+        h1{
+            text-align:center;
+            color:#f59e0b;
+            margin-bottom:40px;
+        }
+
+        .profile-box{
+            background:#1e293b;
+            padding:30px;
+            border-radius:15px;
+            max-width:1100px;
+            margin:auto;
+        }
+
+        .top-section{
+            display:flex;
+            align-items:center;
+            gap:30px;
+            flex-wrap:wrap;
+        }
+
+        .top-section img{
+            width:140px;
+            height:140px;
+            border-radius:50%;
+            object-fit:cover;
+            border:4px solid #22c55e;
+        }
+
+        .info h2{
+            margin:0;
+            font-size:30px;
+        }
+
+        .info p{
+            color:#cbd5e1;
+            margin-top:10px;
+        }
+
+        .stats{
+            margin-top:40px;
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(180px,1fr));
+            gap:20px;
+        }
+
+        .card{
+            background:#0f172a;
+            padding:25px;
+            border-radius:12px;
+            text-align:center;
+        }
+
+        .card h3{
+            margin:0;
+            color:#f59e0b;
+            font-size:18px;
+        }
+
+        .card p{
+            font-size:30px;
+            margin-top:15px;
+            font-weight:bold;
+        }
+
+        .buttons{
+            margin-top:40px;
+            display:flex;
+            gap:20px;
+            flex-wrap:wrap;
+        }
+
+        .btn{
+            background:#22c55e;
+            color:white;
+            text-decoration:none;
+            padding:12px 22px;
+            border-radius:10px;
+            font-weight:bold;
+            transition:0.3s;
+        }
+
+        .btn:hover{
+            background:#16a34a;
+            transform:scale(1.03);
+        }
+
+        .recent-section{
+            margin-top:60px;
+        }
+
+        .recent-title{
+            color:#f59e0b;
+            margin-bottom:25px;
+        }
+
+        .recent-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:20px;
+        }
+
+        .purchase-card{
+            background:#0f172a;
+            padding:20px;
+            border-radius:12px;
+        }
+
+        .purchase-card img{
+            width:100%;
+            height:250px;
+            object-fit:cover;
+            border-radius:10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1>
+        Buyer Profile
+    </h1>
+
+    <div class="profile-box">
+
+        <div class="top-section">
+
+            {% if buyer.profile_photo %}
+
+            <img src="{{ buyer.profile_photo.url }}">
+
+            {% else %}
+
+            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+
+            {% endif %}
+
+            <div class="info">
+
+                <h2>
+
+                    {% if buyer.full_name %}
+
+                        {{ buyer.full_name }}
+
+                    {% else %}
+
+                        {{ buyer.username }}
+
+                    {% endif %}
+
+                </h2>
+
+                <p>
+                    Username:
+                    {{ buyer.username }}
+                </p>
+
+                <p>
+                    Email:
+                    {{ buyer.email }}
+                </p>
+
+                <p>
+                    Phone:
+                    {{ buyer.phone }}
+                </p>
+
+                <p>
+                    Total Account Status:
+
+                    {% if approved_count > 0 %}
+                        Active Buyer ✅
+                    {% else %}
+                        New Buyer 🆕
+                    {% endif %}
+                </p>
+
+                <p>
+                    Joined:
+                    {{ buyer.joined_date }}
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="stats">
+
+            <div class="card">
+
+                <h3>
+                    Total Purchases
+                </h3>
+
+                <p>
+                    {{ purchases.count }}
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>
+                    Approved
+                </h3>
+
+                <p>
+                    {{ approved_count }}
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>
+                    Pending
+                </h3>
+
+                <p>
+                    {{ pending_count }}
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>
+                    Rejected
+                </h3>
+
+                <p>
+                    {{ rejected_count }}
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>
+                    Downloads Used
+                </h3>
+
+                <p>
+                    {{ downloaded_count }}
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="buttons">
+
+            <a href="/my-purchases/"
+               class="btn">
+                My Purchases
+            </a>
+
+            <a href="/edit-buyer-profile/"
+               class="btn">
+                Edit Profile
+            </a>
+
+            <a href="/"
+               class="btn">
+                Home
+            </a>
+
+            <a href="/logout/"
+               class="btn"
+               style="background:#ef4444;">
+                Logout
+            </a>
+
+        </div>
+
+        <div class="recent-section">
+
+            <h2 class="recent-title">
+                Recent Purchases
+            </h2>
+
+            <div class="recent-grid">
+
+                {% for purchase in purchases %}
+
+                <div class="purchase-card">
+
+                    <img src="{{ purchase.book.cover_image.url }}">
+
+                    <h3 style="
+                    margin-top:15px;
+                    ">
+                        {{ purchase.book.title }}
+                    </h3>
+
+                    <p style="
+                    color:#94a3b8;
+                    ">
+                        {{ purchase.book.category }}
+                    </p>
+
+                    <p style="
+                    color:#22c55e;
+                    font-weight:bold;
+                    margin-top:10px;
+                    ">
+                        ₹{{ purchase.book.price }}
+                    </p>
+
+                    {% if purchase.payment_approved %}
+
+                    <p style="
+                    color:#22c55e;
+                    margin-top:10px;
+                    ">
+                        Approved ✅
+                    </p>
+
+                    {% elif purchase.payment_rejected %}
+
+                    <p style="
+                    color:#ef4444;
+                    margin-top:10px;
+                    ">
+                        Rejected ❌
+                    </p>
+
+                    {% if purchase.reject_reason %}
+
+                    <p style="
+                    color:#fca5a5;
+                    font-size:14px;
+                    margin-top:10px;
+                    ">
+                        Reason:
+                        {{ purchase.reject_reason }}
+                    </p>
+
+                    {% endif %}
+
+                    {% else %}
+
+                    <p style="
+                    color:#f59e0b;
+                    margin-top:10px;
+                    ">
+                        Pending ⏳
+                    </p>
+
+                    {% endif %}
+
+                    {% if purchase.payment_approved %}
+
+                    <p style="
+                    color:#cbd5e1;
+                    margin-top:10px;
+                    ">
+                        Downloads:
+                        {{ purchase.download_count }}/3
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+                {% empty %}
+
+                <p>
+                    No purchases available.
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {{ book.title }}
+    </title>
+
+    <style>
+
+        body{
+            margin:0;
+            padding:40px;
+            background:#0f172a;
+            color:white;
+            font-family:Arial, sans-serif;
+        }
+
+        .container{
+            max-width:1200px;
+            margin:auto;
+        }
+
+        .back-btn{
+            display:inline-block;
+            margin-bottom:30px;
+            background:#334155;
+            color:white;
+            text-decoration:none;
+            padding:12px 20px;
+            border-radius:10px;
+        }
+
+        .book-box{
+            display:flex;
+            gap:40px;
+            flex-wrap:wrap;
+            background:#1e293b;
+            padding:30px;
+            border-radius:20px;
+        }
+
+        .book-image img{
+            width:350px;
+            border-radius:15px;
+            object-fit:cover;
+        }
+
+        .book-info{
+            flex:1;
+        }
+
+        .book-info h1{
+            font-size:45px;
+            margin-bottom:15px;
+        }
+
+        .category{
+            color:#94a3b8;
+            font-size:18px;
+        }
+
+        .price{
+            font-size:40px;
+            color:#22c55e;
+            margin-top:20px;
+            font-weight:bold;
+        }
+
+        .desc{
+            margin-top:25px;
+            line-height:1.8;
+            color:#cbd5e1;
+        }
+
+        .seller{
+            margin-top:25px;
+            background:#0f172a;
+            padding:20px;
+            border-radius:12px;
+        }
+
+        .seller h3{
+            color:#f59e0b;
+            margin-bottom:15px;
+        }
+
+        .btn{
+            display:inline-block;
+            margin-top:30px;
+            background:#f59e0b;
+            color:black;
+            padding:15px 30px;
+            border-radius:10px;
+            text-decoration:none;
+            font-weight:bold;
+            font-size:18px;
+        }
+
+        .review-section{
+            margin-top:60px;
+        }
+
+        .review-section h2{
+            color:#f59e0b;
+            margin-bottom:25px;
+        }
+
+        .review-card{
+            background:#1e293b;
+            padding:20px;
+            border-radius:12px;
+            margin-top:20px;
+        }
+
+        .review-card h3{
+            margin:0;
+        }
+
+        .review-card p{
+            margin-top:10px;
+            color:#cbd5e1;
+        }
+
+        textarea,
+        select{
+            width:100%;
+            padding:15px;
+            border:none;
+            border-radius:10px;
+            margin-bottom:15px;
+        }
+
+        button{
+            background:#22c55e;
+            color:white;
+            border:none;
+            padding:14px 25px;
+            border-radius:10px;
+            font-size:16px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        @media(max-width:768px){
+
+            body{
+                padding:20px;
+            }
+
+            .book-box{
+                flex-direction:column;
+            }
+
+            .book-image img{
+                width:100%;
+            }
+
+            .book-info h1{
+                font-size:35px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <a href="/"
+           class="back-btn">
+            ← Back to Home
+        </a>
+
+        <div class="book-box">
+
+            <div class="book-image">
+
+                <img src="{{ book.cover_image.url }}">
+
+            </div>
+
+            <div class="book-info">
+
+                <h1>
+                    {{ book.title }}
+                </h1>
+
+                <div class="category">
+                    {{ book.category }}
+                </div>
+
+                <div class="price">
+                    ₹{{ book.price }}
+                </div>
+
+                <div class="desc">
+                    {{ book.description }}
+                </div>
+
+                <div class="seller">
+
+                    <h3>
+                        Seller Information
+                    </h3>
+
+                    <p>
+                        👤 {{ book.seller.full_name }}
+                    </p>
+
+                    <p>
+                        📧 {{ book.seller.email }}
+                    </p>
+
+                </div>
+
+                <a href="/buy-book/{{ book.id }}/"
+                   class="btn">
+                    Buy Now
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- REVIEWS -->
+
+        <div class="review-section">
+
+            <h2>
+                Reviews & Ratings
+            </h2>
+
+            <!-- REVIEW FORM -->
+
+            {% if purchased and not already_reviewed %}
+
+            <form method="POST"
+                  style="
+                  background:#1e293b;
+                  padding:25px;
+                  border-radius:15px;
+                  margin-bottom:35px;
+                  ">
+
+                {% csrf_token %}
+
+                <select name="rating"
+                        required>
+
+                    <option value="">
+                        Select Rating
+                    </option>
+
+                    <option value="5">
+                        ⭐⭐⭐⭐⭐
+                    </option>
+
+                    <option value="4">
+                        ⭐⭐⭐⭐
+                    </option>
+
+                    <option value="3">
+                        ⭐⭐⭐
+                    </option>
+
+                    <option value="2">
+                        ⭐⭐
+                    </option>
+
+                    <option value="1">
+                        ⭐
+                    </option>
+
+                </select>
+
+                <textarea
+                    name="comment"
+                    rows="5"
+                    placeholder="Write your review..."
+                    required></textarea>
+
+                <button type="submit">
+                    Submit Review
+                </button>
+
+            </form>
+
+            {% elif already_reviewed %}
+
+            <p style="
+            color:#22c55e;
+            font-weight:bold;
+            margin-bottom:25px;
+            ">
+                ✅ You already reviewed this book.
+            </p>
+
+            {% endif %}
+
+            <!-- ALL REVIEWS -->
+
+            {% for review in reviews %}
+
+            <div class="review-card">
+
+                <h3>
+                    {{ review.buyer.username }}
+                </h3>
+
+                <p>
+                    ⭐ {{ review.rating }}/5
+                </p>
+
+                <p>
+                    {{ review.comment }}
+                </p>
+
+                <small style="
+                color:#94a3b8;
+                ">
+                    {{ review.created_at }}
+                </small>
+
+            </div>
+
+            {% empty %}
+
+            <p style="
+            color:#94a3b8;
+            ">
+                No reviews yet.
+            </p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

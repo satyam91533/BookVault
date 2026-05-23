@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Purchases</title>
+
+    <style>
+
+        body{
+            background:#0f172a;
+            color:white;
+            font-family:Arial, sans-serif;
+            margin:0;
+            padding:40px;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:50px;
+            color:#f59e0b;
+        }
+
+        .container{
+            display:flex;
+            flex-wrap:wrap;
+            gap:30px;
+            justify-content:center;
+        }
+
+        .card{
+            background:#1e293b;
+            width:270px;
+            padding:20px;
+            border-radius:15px;
+            text-align:center;
+        }
+
+        .card img{
+            width:100%;
+            height:320px;
+            object-fit:cover;
+            border-radius:10px;
+        }
+
+        .card h2{
+            margin-top:15px;
+        }
+
+        .downloads{
+            margin-top:10px;
+            color:#cbd5e1;
+        }
+
+        .btn{
+            display:inline-block;
+            margin-top:15px;
+            padding:12px 20px;
+            background:#22c55e;
+            color:white;
+            text-decoration:none;
+            border-radius:10px;
+            font-weight:bold;
+            transition:0.3s;
+        }
+
+        .btn:hover{
+            background:#16a34a;
+            transform:scale(1.03);
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1>
+        My Purchased Books
+    </h1>
+
+    <div class="container">
+
+        {% for purchase in purchases %}
+
+        <div class="card">
+
+            <img src="{{ purchase.book.cover_image.url }}">
+
+            <h2>
+                {{ purchase.book.title }}
+            </h2>
+
+            <p style="
+            color:#94a3b8;
+            margin-top:8px;
+            ">
+                {{ purchase.book.category }}
+            </p>
+
+            <p style="
+            color:#22c55e;
+            font-size:20px;
+            font-weight:bold;
+            margin-top:10px;
+            ">
+                ₹{{ purchase.book.price }}
+            </p>
+
+            <p style="
+            color:#cbd5e1;
+            margin-top:10px;
+            font-size:14px;
+            ">
+                Purchased On:
+                {{ purchase.purchase_date }}
+            </p>
+
+            <div style="
+            margin-top:15px;
+            ">
+
+                {% if purchase.payment_approved %}
+
+                <p style="
+                background:#22c55e;
+                padding:10px;
+                border-radius:8px;
+                text-align:center;
+                ">
+                    Payment Approved ✅
+                </p>
+
+                <p class="downloads">
+                    Downloads Used:
+                    {{ purchase.download_count }}/3
+                </p>
+
+                <p style="
+                color:#f59e0b;
+                margin-top:8px;
+                font-size:14px;
+                ">
+                    Remaining Downloads:
+
+                    {% if purchase.download_count == 0 %}
+                        3
+
+                    {% elif purchase.download_count == 1 %}
+                        2
+
+                    {% elif purchase.download_count == 2 %}
+                        1
+
+                    {% else %}
+                        0
+                    {% endif %}
+
+                </p>
+
+                {% if purchase.download_count < 3 %}
+
+                <a href="/download-book/{{ purchase.id }}/"
+                   class="btn">
+                    Download PDF
+                </a>
+
+                {% else %}
+
+                <p style="
+                background:#ef4444;
+                padding:10px;
+                border-radius:8px;
+                margin-top:15px;
+                font-weight:bold;
+                ">
+                    Download Limit Reached ❌
+                </p>
+
+                {% endif %}
+
+                {% elif purchase.payment_rejected %}
+
+                <p style="
+                background:#ef4444;
+                padding:10px;
+                border-radius:8px;
+                text-align:center;
+                ">
+                    Payment Rejected ❌
+                </p>
+
+                <p style="
+                color:#fca5a5;
+                margin-top:10px;
+                ">
+                    Reason:
+                    {{ purchase.reject_reason }}
+                </p>
+
+                {% else %}
+
+                <p style="
+                background:#f59e0b;
+                color:black;
+                padding:10px;
+                border-radius:8px;
+                text-align:center;
+                ">
+                    Payment Pending ⏳
+                </p>
+
+                <p style="
+                margin-top:10px;
+                color:#cbd5e1;
+                ">
+                    Waiting for admin approval.
+                </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div style="
+        background:#1e293b;
+        padding:40px;
+        border-radius:15px;
+        text-align:center;
+        width:100%;
+        max-width:500px;
+        ">
+
+            <h2 style="
+            color:#f59e0b;
+            ">
+                No Purchases Yet
+            </h2>
+
+            <p style="
+            color:#cbd5e1;
+            margin-top:15px;
+            ">
+                You have not purchased any books yet.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</body>
+
+</html>

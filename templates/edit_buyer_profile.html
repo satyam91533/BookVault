@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Buyer Profile</title>
+
+    <style>
+
+        body{
+            background:#0f172a;
+            color:white;
+            font-family:Arial, sans-serif;
+            padding:40px;
+        }
+
+        .box{
+            max-width:500px;
+            margin:auto;
+            background:#1e293b;
+            padding:30px;
+            border-radius:15px;
+        }
+
+        h1{
+            text-align:center;
+            color:#f59e0b;
+            margin-bottom:30px;
+        }
+
+        input{
+            width:100%;
+            padding:14px;
+            margin-bottom:20px;
+            border:none;
+            border-radius:10px;
+            background:#0f172a;
+            color:white;
+        }
+
+        button{
+            width:100%;
+            padding:14px;
+            background:#22c55e;
+            color:white;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#16a34a;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="box">
+
+        <h1>
+            Edit Profile
+        </h1>
+
+        <form method="POST"
+              enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <input type="text"
+                   name="full_name"
+                   placeholder="Full Name"
+                   value="{{ buyer.full_name }}">
+
+            <input type="email"
+                   name="email"
+                   placeholder="Email"
+                   value="{{ buyer.email }}">
+
+            <input type="text"
+                   name="phone"
+                   placeholder="Phone"
+                   value="{{ buyer.phone }}">
+
+            <input type="file"
+                   name="profile_photo">
+
+            <button type="submit">
+                Update Profile
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>
