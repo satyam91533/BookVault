@@ -25,6 +25,7 @@ ALLOWED_HOSTS = [
 
 # Installed apps
 INSTALLED_APPS = [
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -32,12 +33,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'cloudinary_storage',
+    'cloudinary',
+
     'usersystem',
 ]
 
 
 # Middleware
 MIDDLEWARE = [
+
     'django.middleware.security.SecurityMiddleware',
 
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -126,13 +131,22 @@ STATIC_ROOT = os.path.join(
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
+# Cloudinary Storage
+CLOUDINARY_STORAGE = {
+
+    'CLOUD_NAME': 'satyyy',
+
+    'API_KEY': '397415567855769',
+
+    'API_SECRET': 'Hy54s0B0-DLVUG040GmP-vjkMdA',
+}
+
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
 # Media files
 MEDIA_URL = '/media/'
-
-MEDIA_ROOT = os.path.join(
-    BASE_DIR,
-    'media'
-)
 
 
 # Default primary key field type
