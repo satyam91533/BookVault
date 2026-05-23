@@ -85,6 +85,8 @@ class PurchaseAdmin(admin.ModelAdmin):
         'book',
         'payment_approved',
         'payment_rejected',
+        'payment_screenshot',
+        'utr_number',
         'reject_reason',
         'download_count'
     )

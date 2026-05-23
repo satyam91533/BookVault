@@ -55,6 +55,70 @@ def home(request):
 
     })
 
+# ================= BUYER SIGNUP =================
+
+def buyer_signup(request):
+
+    error = ""
+
+    success = False
+
+    if request.method == "POST":
+
+        username = request.POST.get(
+            'username'
+        )
+
+        if Buyer.objects.filter(
+            username=username
+        ).exists():
+
+            error = "Username already exists"
+
+        else:
+
+            buyer = Buyer.objects.create(
+
+                full_name=request.POST.get(
+                    'full_name'
+                ),
+
+                username=username,
+
+                email=request.POST.get(
+                    'email'
+                ),
+
+                phone=request.POST.get(
+                    'phone'
+                ),
+
+                password=request.POST.get(
+                    'password'
+                )
+
+            )
+
+            if request.FILES.get(
+                'profile_photo'
+            ):
+
+                buyer.profile_photo = request.FILES.get(
+                    'profile_photo'
+                )
+
+                buyer.save()
+
+            success = True
+
+    return render(request, 'buyer_signup.html', {
+
+        'success': success,
+
+        'error': error
+
+    })
+
 
 # ================= BUYER LOGIN =================
 
@@ -88,7 +152,6 @@ def login_view(request):
     return render(request, 'login.html', {
         'error': error
     })
-
 
 # ================= LOGOUT =================
 
@@ -814,13 +877,18 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 
-    path('', home),
+path('', home),
 
-    path('login/', login_view),
+path(
+    'buyer-signup/',
+    buyer_signup
+),
 
-    path('logout/', logout_view),
+path('login/', login_view),
 
-    path('buyer-profile/', buyer_profile),
+path('logout/', logout_view),
+
+path('buyer-profile/', buyer_profile),
 
     path(
         'edit-buyer-profile/',
