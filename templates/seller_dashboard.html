@@ -365,62 +365,82 @@
 
             </div>
 
-        </div>
+     </div>
 
-        <!-- UPLOAD SECTION -->
+<!-- UPLOAD SECTION -->
 
-        <div class="section"
-             id="upload">
+<div class="section"
+     id="upload">
 
-            <h2>
-                Upload New Book
-            </h2>
+    <h2>
+        Upload New Book
+    </h2>
 
-            <form method="POST"
-                  enctype="multipart/form-data">
+    <form method="POST"
+          enctype="multipart/form-data">
 
-                {% csrf_token %}
+        {% csrf_token %}
 
-                <input type="hidden"
-                       name="upload_book"
-                       value="1">
+        <input type="hidden"
+               name="upload_book"
+               value="1">
 
-                <input type="text"
-                       name="title"
-                       placeholder="Book Title"
-                       required>
+        <input type="text"
+               name="title"
+               placeholder="Book Title"
+               required>
 
-                <input type="text"
-                       name="category"
-                       placeholder="Category"
-                       required>
+        <input type="text"
+               name="category"
+               placeholder="Category"
+               required>
 
-                <input type="number"
-                       name="price"
-                       placeholder="Price"
-                       required>
+        <input type="number"
+               name="price"
+               placeholder="Price"
+               required>
 
-                <textarea
-                    name="description"
-                    placeholder="Description"
-                    rows="5"
-                    required></textarea>
+        <textarea
+            name="description"
+            placeholder="Description"
+            rows="5"
+            required></textarea>
 
-                <input type="file"
-                       name="pdf_file"
-                       required>
+        <label style="
+        font-weight:bold;
+        display:block;
+        margin-bottom:8px;
+        ">
+            Upload PDF Book File
+        </label>
 
-                <input type="file"
-                       name="cover_image"
-                       required>
+        <input type="file"
+               name="pdf_file"
+               accept=".pdf"
+               required>
 
-                <button type="submit">
-                    Upload Book
-                </button>
+        <br><br>
 
-            </form>
+        <label style="
+        font-weight:bold;
+        display:block;
+        margin-bottom:8px;
+        ">
+            Upload Book Cover Image
+        </label>
 
-        </div>
+        <input type="file"
+               name="cover_image"
+               accept="image/*"
+               required>
+
+        <button type="submit">
+            Upload Book
+        </button>
+
+    </form>
+
+</div>
 
         <!-- MY BOOKS -->
 
