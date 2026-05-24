@@ -133,7 +133,7 @@ STATIC_ROOT = os.path.join(
 # Cloudinary Storage
 CLOUDINARY_STORAGE = {
 
-    'CLOUD_NAME': 'satyyy',
+    'CLOUD_NAME': 'mybookvault',
 
     'API_KEY': '397415567855769',
 
