@@ -660,62 +660,41 @@ def seller_dashboard(request):
 
             # ================= PDF SIZE LIMIT =================
 
-            if pdf_file.size > 10 * 1024 * 1024:
+            if pdf_file and pdf_file.size > 10 * 1024 * 1024:
 
                 error = "PDF size must be under 10 MB"
 
-            else:
+            elif (
+                title and
+                category and
+                price and
+                description and
+                pdf_file and
+                cover_image
+            ):
 
-                if (
-                    title and
-                    category and
-                    price and
-                    description and
-                    pdf_file and
-                    cover_image
-                ):
+                Book.objects.create(
 
-                    Book.objects.create(
+                    title=title,
 
-                        title=title,
+                    category=category,
 
-                        category=category,
+                    price=int(price),
 
-                        price=int(price),
+                    description=description,
 
-                        description=description,
+                    pdf_file=pdf_file,
 
-                        pdf_file=pdf_file,
+                    cover_image=cover_image,
 
-                        cover_image=cover_image,
+                    seller=seller,
 
-                        seller=seller,
+                    approved=False
 
-                        approved=False
-
-                    )
+                )
 
                 return redirect('/seller-dashboard/')
 
-    return render(request, 'seller_dashboard.html', {
-
-        'seller': seller,
-
-        'total_books': total_books,
-
-        'total_sales': total_sales,
-
-        'earnings': earnings,
-
-        'seller_books': seller_books,
-
-        'seller_purchases': seller_purchases,
-
-        'withdrawals': withdrawals,
-
-        'error': error
-
-    })
         # ================= WITHDRAW REQUEST =================
 
         withdraw_amount = request.POST.get(
@@ -762,7 +741,9 @@ def seller_dashboard(request):
 
         'seller_purchases': seller_purchases,
 
-        'withdrawals': withdrawals
+        'withdrawals': withdrawals,
+
+        'error': error
 
     })
 
