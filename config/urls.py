@@ -636,6 +636,8 @@ def seller_dashboard(request):
         seller=seller
     ).order_by('-request_date')
 
+    error = ""
+
     # ================= POST ACTIONS =================
 
     if request.method == "POST":
@@ -656,37 +658,64 @@ def seller_dashboard(request):
 
             cover_image = request.FILES.get('cover_image')
 
-            if (
-                title and
-                category and
-                price and
-                description and
-                pdf_file and
-                cover_image
-            ):
+            # ================= PDF SIZE LIMIT =================
 
-                Book.objects.create(
+            if pdf_file.size > 10 * 1024 * 1024:
 
-                    title=title,
+                error = "PDF size must be under 10 MB"
 
-                    category=category,
+            else:
 
-                    price=int(price),
+                if (
+                    title and
+                    category and
+                    price and
+                    description and
+                    pdf_file and
+                    cover_image
+                ):
 
-                    description=description,
+                    Book.objects.create(
 
-                    pdf_file=pdf_file,
+                        title=title,
 
-                    cover_image=cover_image,
+                        category=category,
 
-                    seller=seller,
+                        price=int(price),
 
-                    approved=False
+                        description=description,
 
-                )
+                        pdf_file=pdf_file,
 
-            return redirect('/seller-dashboard/')
+                        cover_image=cover_image,
 
+                        seller=seller,
+
+                        approved=False
+
+                    )
+
+                return redirect('/seller-dashboard/')
+
+    return render(request, 'seller_dashboard.html', {
+
+        'seller': seller,
+
+        'total_books': total_books,
+
+        'total_sales': total_sales,
+
+        'earnings': earnings,
+
+        'seller_books': seller_books,
+
+        'seller_purchases': seller_purchases,
+
+        'withdrawals': withdrawals,
+
+        'error': error
+
+    })
         # ================= WITHDRAW REQUEST =================
 
         withdraw_amount = request.POST.get(
