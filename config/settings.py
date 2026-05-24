@@ -129,8 +129,6 @@ STATIC_ROOT = os.path.join(
     'staticfiles'
 )
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 
 # Cloudinary Storage
 CLOUDINARY_STORAGE = {
@@ -143,7 +141,17 @@ CLOUDINARY_STORAGE = {
 }
 
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# Django 6 STORAGES
+STORAGES = {
+
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 
 # Media files
@@ -152,6 +160,9 @@ MEDIA_URL = '/media/'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Upload limits
 DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800
