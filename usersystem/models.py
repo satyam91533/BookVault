@@ -107,12 +107,15 @@ class Book(models.Model):
 
     description = models.TextField()
 
-    pdf_file = models.FileField(
-        upload_to='books/pdfs/'
-    )
+    # PDF LINK (MEGA LINK)
 
-    cover_image = models.ImageField(
-        upload_to='books/covers/'
+    pdf_file = models.URLField()
+
+    # COVER IMAGE URL (ImgBB)
+
+    cover_image = models.URLField(
+        blank=True,
+        null=True
     )
 
     seller = models.ForeignKey(

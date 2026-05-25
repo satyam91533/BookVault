@@ -406,56 +406,53 @@
             rows="5"
             required></textarea>
 
+        <!-- PDF LINK -->
+
+        <label style="
+        font-weight:bold;
+        display:block;
+        margin-bottom:8px;
+        color:white;
+        ">
+            Paste MEGA PDF Link
+        </label>
+
+        <input type="url"
+               name="pdf_file"
+               placeholder="Paste MEGA PDF Link"
+               required>
+
+        <br><br>
+
+        <!-- COVER IMAGE -->
+
         <label style="
         font-weight:bold;
         display:block;
         margin-bottom:8px;
         ">
-            Upload PDF Book File
+            Upload Book Cover Image
         </label>
 
-       <label style="
-font-weight:bold;
-display:block;
-margin-bottom:8px;
-color:white;
-">
-    Upload PDF Book File
-</label>
+        <p style="
+        color:red;
+        margin-bottom:10px;
+        font-weight:bold;
+        ">
+            ⚠ Maximum Image size allowed: 10 MB
+        </p>
 
-<p style="
-color:red;
-margin-bottom:10px;
-font-weight:bold;
-">
-    ⚠ Maximum PDF size allowed: 10 MB
-</p>
+        <input type="file"
+               name="cover_image"
+               accept="image/*"
+               required>
 
-<input type="file"
-       name="pdf_file"
-       accept=".pdf"
-       required>
+        <button type="submit">
+            Upload Book
+        </button>
 
-<br><br>
+    </form>
 
-<label style="
-font-weight:bold;
-display:block;
-margin-bottom:8px;
-">
-    Upload Book Cover Image
-</label>
-
-<input type="file"
-       name="cover_image"
-       accept="image/*"
-       required>
-
-<button type="submit">
-    Upload Book
-</button>
-
-</form>
 
 </div>
 

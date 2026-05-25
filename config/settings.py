@@ -35,9 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'cloudinary_storage',
-    'cloudinary',
-
     'usersystem',
 ]
 
@@ -129,33 +126,17 @@ STATIC_ROOT = os.path.join(
     'staticfiles'
 )
 
-
-# Cloudinary Storage
-CLOUDINARY_STORAGE = {
-
-    'CLOUD_NAME': 'diojxskge',
-
-    'API_KEY': '397415567855769',
-
-    'API_SECRET': 'Hy54s0B0-DLVUG040GmP-vjkMdA',
-}
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# Django 6 STORAGES
-STORAGES = {
-
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
+# ImgBB API Key
+IMGBB_API_KEY = '5c01477dcc1001f3b082bcfac354e1da'
 
 
 # Media files
 MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Default primary key field type

@@ -605,6 +605,11 @@ def seller_login(request):
 
 # ================= SELLER DASHBOARD =================
 
+import requests
+import base64
+from django.conf import settings
+
+
 def seller_dashboard(request):
 
     seller_id = request.session.get('seller_id')
@@ -654,15 +659,22 @@ def seller_dashboard(request):
 
             description = request.POST.get('description')
 
-            pdf_file = request.FILES.get('pdf_file')
+            # MEGA LINK
+
+            pdf_file = request.POST.get('pdf_file')
+
+            # IMAGE FILE
 
             cover_image = request.FILES.get('cover_image')
 
-            # ================= PDF SIZE LIMIT =================
+            # ================= IMAGE SIZE LIMIT =================
 
-            if pdf_file and pdf_file.size > 10 * 1024 * 1024:
+            if (
+                cover_image and
+                cover_image.size > 10 * 1024 * 1024
+            ):
 
-                error = "PDF size must be under 10 MB"
+                error = "Image size must be under 10 MB"
 
             elif (
                 title and
@@ -672,6 +684,32 @@ def seller_dashboard(request):
                 pdf_file and
                 cover_image
             ):
+
+                # ================= IMGBB UPLOAD =================
+
+                image_data = base64.b64encode(
+                    cover_image.read()
+                )
+
+                response = requests.post(
+
+                    "https://api.imgbb.com/1/upload",
+
+                    data={
+
+                        "key": settings.IMGBB_API_KEY,
+
+                        "image": image_data
+
+                    }
+
+                )
+
+                result = response.json()
+
+                image_url = result['data']['url']
+
+                # ================= SAVE BOOK =================
 
                 Book.objects.create(
 
@@ -685,7 +723,7 @@ def seller_dashboard(request):
 
                     pdf_file=pdf_file,
 
-                    cover_image=cover_image,
+                    cover_image=image_url,
 
                     seller=seller,
 
@@ -769,6 +807,8 @@ def edit_book(request, id):
         seller=seller
     )
 
+    error = ""
+
     if request.method == "POST":
 
         book.title = request.POST.get('title')
@@ -779,17 +819,52 @@ def edit_book(request, id):
 
         book.description = request.POST.get('description')
 
-        if request.FILES.get('pdf_file'):
+        # MEGA LINK
 
-            book.pdf_file = request.FILES.get(
-                'pdf_file'
-            )
+        book.pdf_file = request.POST.get(
+            'pdf_file'
+        )
+
+        # NEW IMAGE
 
         if request.FILES.get('cover_image'):
 
-            book.cover_image = request.FILES.get(
+            cover_image = request.FILES.get(
                 'cover_image'
             )
+
+            if (
+                cover_image.size >
+                10 * 1024 * 1024
+            ):
+
+                error = "Image size must be under 10 MB"
+
+            else:
+
+                image_data = base64.b64encode(
+                    cover_image.read()
+                )
+
+                response = requests.post(
+
+                    "https://api.imgbb.com/1/upload",
+
+                    data={
+
+                        "key": settings.IMGBB_API_KEY,
+
+                        "image": image_data
+
+                    }
+
+                )
+
+                result = response.json()
+
+                image_url = result['data']['url']
+
+                book.cover_image = image_url
 
         book.approved = False
 
@@ -802,9 +877,12 @@ def edit_book(request, id):
         return redirect('/seller-dashboard/')
 
     return render(request, 'edit_book.html', {
-        'book': book
-    })
 
+        'book': book,
+
+        'error': error
+
+    })
 
 # ================= DELETE BOOK =================
 
