@@ -4,7 +4,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from django.shortcuts import render, redirect
-from django.http import FileResponse
 
 from usersystem.models import (
     Buyer,
@@ -104,13 +103,39 @@ def buyer_signup(request):
 
             )
 
+            # ================= IMGBB PROFILE PHOTO =================
+
             if request.FILES.get(
                 'profile_photo'
             ):
 
-                buyer.profile_photo = request.FILES.get(
+                profile_photo = request.FILES.get(
                     'profile_photo'
                 )
+
+                image_data = base64.b64encode(
+                    profile_photo.read()
+                )
+
+                response = requests.post(
+
+                    "https://api.imgbb.com/1/upload",
+
+                    data={
+
+                        "key": settings.IMGBB_API_KEY,
+
+                        "image": image_data
+
+                    }
+
+                )
+
+                result = response.json()
+
+                image_url = result['data']['url']
+
+                buyer.profile_photo = image_url
 
                 buyer.save()
 
@@ -121,287 +146,6 @@ def buyer_signup(request):
         'success': success,
 
         'error': error
-
-    })
-
-
-# ================= BUYER LOGIN =================
-
-def login_view(request):
-
-    error = ""
-
-    if request.method == "POST":
-
-        username = request.POST.get('username')
-
-        password = request.POST.get('password')
-
-        try:
-
-            buyer = Buyer.objects.get(
-                username=username,
-                password=password
-            )
-
-            request.session.flush()
-
-            request.session['buyer_id'] = buyer.id
-
-            return redirect('/buyer-profile/')
-
-        except Buyer.DoesNotExist:
-
-            error = "Invalid Username or Password"
-
-    return render(request, 'login.html', {
-        'error': error
-    })
-
-# ================= LOGOUT =================
-
-def logout_view(request):
-
-    request.session.flush()
-
-    return redirect('/')
-
-
-# ================= BUYER PROFILE =================
-
-def buyer_profile(request):
-
-    buyer_id = request.session.get('buyer_id')
-
-    if not buyer_id:
-
-        return redirect('/login/')
-
-    buyer = Buyer.objects.get(
-        id=buyer_id
-    )
-
-    purchases = Purchase.objects.filter(
-        buyer=buyer
-    )
-
-    approved_count = purchases.filter(
-        payment_approved=True
-    ).count()
-
-    rejected_count = purchases.filter(
-        payment_rejected=True
-    ).count()
-
-    pending_count = purchases.filter(
-        payment_approved=False,
-        payment_rejected=False
-    ).count()
-
-    downloaded_count = 0
-
-    for purchase in purchases:
-
-        downloaded_count += purchase.download_count
-
-    return render(request, 'buyer_profile.html', {
-
-        'buyer': buyer,
-
-        'purchases': purchases,
-
-        'approved_count': approved_count,
-
-        'rejected_count': rejected_count,
-
-        'pending_count': pending_count,
-
-        'downloaded_count': downloaded_count
-
-    })
-
-
-# ================= EDIT BUYER PROFILE =================
-
-def edit_buyer_profile(request):
-
-    buyer_id = request.session.get('buyer_id')
-
-    if not buyer_id:
-
-        return redirect('/login/')
-
-    buyer = Buyer.objects.get(
-        id=buyer_id
-    )
-
-    if request.method == "POST":
-
-        buyer.full_name = request.POST.get(
-            'full_name'
-        )
-
-        buyer.phone = request.POST.get(
-            'phone'
-        )
-
-        if request.FILES.get('profile_photo'):
-
-            buyer.profile_photo = request.FILES.get(
-                'profile_photo'
-            )
-
-        buyer.save()
-
-        return redirect('/buyer-profile/')
-
-    return render(request, 'edit_buyer_profile.html', {
-        'buyer': buyer
-    })
-
-
-# ================= MY PURCHASES =================
-
-def my_purchases(request):
-
-    buyer_id = request.session.get('buyer_id')
-
-    if not buyer_id:
-
-        return redirect('/login/')
-
-    buyer = Buyer.objects.get(
-        id=buyer_id
-    )
-
-    purchases = Purchase.objects.filter(
-        buyer=buyer
-    )
-
-    return render(request, 'my_purchases.html', {
-        'purchases': purchases
-    })
-
-
-# ================= BOOK DETAILS =================
-
-def book_details(request, id):
-
-    book = Book.objects.get(
-        id=id,
-        approved=True
-    )
-
-    reviews = Review.objects.filter(
-        book=book
-    ).order_by('-created_at')
-
-    buyer_id = request.session.get(
-        'buyer_id'
-    )
-
-    purchased = False
-
-    already_reviewed = False
-
-    if buyer_id:
-
-        buyer = Buyer.objects.get(
-            id=buyer_id
-        )
-
-        # ================= PURCHASE CHECK =================
-
-        purchased = Purchase.objects.filter(
-            buyer=buyer,
-            book=book
-        ).exists()
-
-        # ================= REVIEW CHECK =================
-
-        already_reviewed = Review.objects.filter(
-            buyer=buyer,
-            book=book
-        ).exists()
-
-        # ================= ADD REVIEW =================
-
-        if (
-            request.method == "POST"
-            and purchased
-            and not already_reviewed
-        ):
-
-            rating = request.POST.get(
-                'rating'
-            )
-
-            comment = request.POST.get(
-                'comment'
-            )
-
-            Review.objects.create(
-
-                book=book,
-
-                buyer=buyer,
-
-                rating=int(rating),
-
-                comment=comment
-
-            )
-
-            return redirect(
-                f'/book-details/{book.id}/'
-            )
-
-    return render(request, 'book_details.html', {
-
-        'book': book,
-
-        'reviews': reviews,
-
-        'purchased': purchased,
-
-        'already_reviewed': already_reviewed
-
-    })
-# ================= BUY BOOK =================
-
-def buy_book(request, id):
-
-    buyer_id = request.session.get(
-        'buyer_id'
-    )
-
-    if not buyer_id:
-
-        return redirect('/login/')
-
-    book = Book.objects.get(
-        id=id
-    )
-
-    # ================= GET ADMIN UPI =================
-
-    payment_settings = PaymentSettings.objects.first()
-
-    admin_upi = payment_settings.admin_upi
-
-    # ================= QR DATA =================
-
-    qr_data = f"""
-upi://pay?pa={admin_upi}&pn=BookVault&am={book.price}&cu=INR
-"""
-
-    return render(request, 'payment.html', {
-
-        'book': book,
-
-        'admin_upi': admin_upi,
-
-        'qr_data': qr_data
 
     })
 
@@ -436,6 +180,30 @@ def payment_success(request, book_id):
             'payment_screenshot'
         )
 
+        # ================= IMGBB PAYMENT SCREENSHOT =================
+
+        image_data = base64.b64encode(
+            payment_screenshot.read()
+        )
+
+        response = requests.post(
+
+            "https://api.imgbb.com/1/upload",
+
+            data={
+
+                "key": settings.IMGBB_API_KEY,
+
+                "image": image_data
+
+            }
+
+        )
+
+        result = response.json()
+
+        image_url = result['data']['url']
+
         Purchase.objects.create(
 
             buyer=buyer,
@@ -444,7 +212,7 @@ def payment_success(request, book_id):
 
             utr_number=utr_number,
 
-            payment_screenshot=payment_screenshot,
+            payment_screenshot=image_url,
 
             payment_approved=False
 
@@ -456,45 +224,7 @@ def payment_success(request, book_id):
         )
 
     return redirect('/')
-# ================= DOWNLOAD BOOK =================
 
-def download_book(request, id):
-
-    buyer_id = request.session.get(
-        'buyer_id'
-    )
-
-    if not buyer_id:
-
-        return redirect('/login/')
-
-    purchase = Purchase.objects.get(
-        id=id
-    )
-
-    if not purchase.payment_approved:
-
-        return render(
-            request,
-            'payment_pending.html'
-        )
-
-    if purchase.download_count >= 3:
-
-        return render(
-            request,
-            'download_limit.html'
-        )
-
-    purchase.download_count += 1
-
-    purchase.save()
-
-    # REDIRECT TO MEGA PDF LINK
-
-    return redirect(
-        purchase.book.pdf_file
-    )
 
 # ================= SELLER SIGNUP =================
 
@@ -550,13 +280,39 @@ def seller_signup(request):
 
             )
 
+            # ================= IMGBB PROFILE PHOTO =================
+
             if request.FILES.get(
                 'profile_photo'
             ):
 
-                seller.profile_photo = request.FILES.get(
+                profile_photo = request.FILES.get(
                     'profile_photo'
                 )
+
+                image_data = base64.b64encode(
+                    profile_photo.read()
+                )
+
+                response = requests.post(
+
+                    "https://api.imgbb.com/1/upload",
+
+                    data={
+
+                        "key": settings.IMGBB_API_KEY,
+
+                        "image": image_data
+
+                    }
+
+                )
+
+                result = response.json()
+
+                image_url = result['data']['url']
+
+                seller.profile_photo = image_url
 
                 seller.save()
 
@@ -1032,6 +788,291 @@ def support(request):
         'success': success
     })
 
+# ================= LOGIN =================
+
+def login_view(request):
+
+    error = ""
+
+    if request.method == "POST":
+
+        username = request.POST.get(
+            'username'
+        )
+
+        password = request.POST.get(
+            'password'
+        )
+
+        try:
+
+            buyer = Buyer.objects.get(
+                username=username,
+                password=password
+            )
+
+            request.session.flush()
+
+            request.session['buyer_id'] = buyer.id
+
+            return redirect('/buyer-profile/')
+
+        except:
+
+            error = "Invalid Username or Password"
+
+    return render(request, 'login.html', {
+        'error': error
+    })
+
+
+# ================= LOGOUT =================
+
+def logout_view(request):
+
+    request.session.flush()
+
+    return redirect('/')
+
+
+# ================= BUYER PROFILE =================
+
+def buyer_profile(request):
+
+    buyer_id = request.session.get(
+        'buyer_id'
+    )
+
+    if not buyer_id:
+
+        return redirect('/login/')
+
+    buyer = Buyer.objects.get(
+        id=buyer_id
+    )
+
+    purchases = Purchase.objects.filter(
+        buyer=buyer
+    ).order_by('-purchase_date')
+
+    approved_count = purchases.filter(
+        payment_approved=True
+    ).count()
+
+    pending_count = purchases.filter(
+        payment_approved=False,
+        payment_rejected=False
+    ).count()
+
+    rejected_count = purchases.filter(
+        payment_rejected=True
+    ).count()
+
+    downloaded_count = 0
+
+    for purchase in purchases:
+
+        downloaded_count += purchase.download_count
+
+    return render(request, 'buyer_profile.html', {
+
+        'buyer': buyer,
+
+        'purchases': purchases,
+
+        'approved_count': approved_count,
+
+        'pending_count': pending_count,
+
+        'rejected_count': rejected_count,
+
+        'downloaded_count': downloaded_count
+
+    })
+
+
+# ================= EDIT BUYER PROFILE =================
+
+def edit_buyer_profile(request):
+
+    buyer_id = request.session.get(
+        'buyer_id'
+    )
+
+    if not buyer_id:
+
+        return redirect('/login/')
+
+    buyer = Buyer.objects.get(
+        id=buyer_id
+    )
+
+    if request.method == "POST":
+
+        buyer.full_name = request.POST.get(
+            'full_name'
+        )
+
+        buyer.email = request.POST.get(
+            'email'
+        )
+
+        buyer.phone = request.POST.get(
+            'phone'
+        )
+
+        if request.FILES.get(
+            'profile_photo'
+        ):
+
+            profile_photo = request.FILES.get(
+                'profile_photo'
+            )
+
+            image_data = base64.b64encode(
+                profile_photo.read()
+            )
+
+            response = requests.post(
+
+                "https://api.imgbb.com/1/upload",
+
+                data={
+
+                    "key": settings.IMGBB_API_KEY,
+
+                    "image": image_data
+
+                }
+
+            )
+
+            result = response.json()
+
+            image_url = result['data']['url']
+
+            buyer.profile_photo = image_url
+
+        buyer.save()
+
+        return redirect('/buyer-profile/')
+
+    return render(request, 'edit_buyer_profile.html', {
+        'buyer': buyer
+    })
+
+
+# ================= MY PURCHASES =================
+
+def my_purchases(request):
+
+    buyer_id = request.session.get(
+        'buyer_id'
+    )
+
+    if not buyer_id:
+
+        return redirect('/login/')
+
+    buyer = Buyer.objects.get(
+        id=buyer_id
+    )
+
+    purchases = Purchase.objects.filter(
+        buyer=buyer
+    ).order_by('-purchase_date')
+
+    return render(request, 'my_purchases.html', {
+        'purchases': purchases
+    })
+
+
+# ================= BOOK DETAILS =================
+
+def book_details(request, id):
+
+    book = Book.objects.get(
+        id=id,
+        approved=True
+    )
+
+    reviews = Review.objects.filter(
+        book=book
+    ).order_by('-created_at')
+
+    return render(request, 'book_details.html', {
+
+        'book': book,
+
+        'reviews': reviews
+
+    })
+
+
+# ================= BUY BOOK =================
+
+def buy_book(request, id):
+
+    buyer_id = request.session.get(
+        'buyer_id'
+    )
+
+    if not buyer_id:
+
+        return redirect('/login/')
+
+    book = Book.objects.get(
+        id=id
+    )
+
+    settings_obj = PaymentSettings.objects.first()
+
+    return render(request, 'buy_book.html', {
+
+        'book': book,
+
+        'settings_obj': settings_obj
+
+    })
+
+
+# ================= DOWNLOAD BOOK =================
+
+def download_book(request, id):
+
+    buyer_id = request.session.get(
+        'buyer_id'
+    )
+
+    if not buyer_id:
+
+        return redirect('/login/')
+
+    purchase = Purchase.objects.get(
+        id=id
+    )
+
+    if not purchase.payment_approved:
+
+        return render(
+            request,
+            'payment_pending.html'
+        )
+
+    if purchase.download_count >= 3:
+
+        return render(
+            request,
+            'download_limit.html'
+        )
+
+    purchase.download_count += 1
+
+    purchase.save()
+
+    return redirect(
+        purchase.book.pdf_file
+    )
 
 # ================= URLS =================
 
@@ -1129,11 +1170,3 @@ urlpatterns = [
 
 ]
 
-# ================= MEDIA =================
-
-if settings.DEBUG:
-
-    urlpatterns += static(
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT
-    )

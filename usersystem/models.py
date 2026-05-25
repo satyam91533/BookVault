@@ -22,8 +22,7 @@ class Buyer(models.Model):
         null=True
     )
 
-    profile_photo = models.ImageField(
-        upload_to='buyer_profiles/',
+    profile_photo = models.URLField(
         blank=True,
         null=True
     )
@@ -72,8 +71,7 @@ class Seller(models.Model):
         default=False
     )
 
-    profile_photo = models.ImageField(
-        upload_to='seller_profiles/',
+    profile_photo = models.URLField(
         blank=True,
         null=True
     )
@@ -171,8 +169,7 @@ class Purchase(models.Model):
         null=True
     )
 
-    payment_screenshot = models.ImageField(
-        upload_to='payments/',
+    payment_screenshot = models.URLField(
         blank=True,
         null=True
     )
@@ -296,8 +293,7 @@ class PaymentSettings(models.Model):
 
 class SiteSettings(models.Model):
 
-    site_logo = models.ImageField(
-        upload_to='logos/',
+    site_logo = models.URLField(
         blank=True,
         null=True
     )
