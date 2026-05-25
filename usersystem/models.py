@@ -113,8 +113,7 @@ class Book(models.Model):
 
     # COVER IMAGE URL (ImgBB)
 
-    cover_image = models.ImageField(
-        upload_to='book_covers/',
+    cover_image = models.URLField(
         blank=True,
         null=True
     )
