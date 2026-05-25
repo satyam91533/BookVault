@@ -303,7 +303,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 
             image_data = base64.b64encode(
                 logo.read()
-            )
+            ).decode('utf-8')
 
             response = requests.post(
 
@@ -321,9 +321,11 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 
             result = response.json()
 
-            image_url = result['data']['url']
+            if result.get('success'):
 
-            obj.site_logo = image_url
+                image_url = result['data']['url']
+
+                obj.site_logo = image_url
 
         super().save_model(
             request,
