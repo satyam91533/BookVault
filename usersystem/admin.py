@@ -1,5 +1,10 @@
 from django.contrib import admin
 
+import requests
+import base64
+
+from django.conf import settings
+
 from .models import (
     Buyer,
     Seller,
@@ -275,3 +280,54 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     list_display = (
         'site_logo',
     )
+
+    fields = (
+        'site_logo',
+    )
+
+    def save_model(
+        self,
+        request,
+        obj,
+        form,
+        change
+    ):
+
+        if request.FILES.get(
+            'site_logo'
+        ):
+
+            logo = request.FILES.get(
+                'site_logo'
+            )
+
+            image_data = base64.b64encode(
+                logo.read()
+            )
+
+            response = requests.post(
+
+                "https://api.imgbb.com/1/upload",
+
+                data={
+
+                    "key": settings.IMGBB_API_KEY,
+
+                    "image": image_data
+
+                }
+
+            )
+
+            result = response.json()
+
+            image_url = result['data']['url']
+
+            obj.site_logo = image_url
+
+        super().save_model(
+            request,
+            obj,
+            form,
+            change
+        )
