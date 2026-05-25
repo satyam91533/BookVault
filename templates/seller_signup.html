@@ -132,4 +132,149 @@
 
 </body>
 
+</html><!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Seller Signup</title>
+
+    <style>
+
+        body{
+            background:#0f172a;
+            font-family:Arial, sans-serif;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+            margin:0;
+            padding:20px;
+        }
+
+        .signup-box{
+            background:#1e293b;
+            padding:40px;
+            border-radius:15px;
+            width:400px;
+        }
+
+        h1{
+            text-align:center;
+            color:#3b82f6;
+            margin-bottom:30px;
+        }
+
+        input{
+            width:100%;
+            padding:15px;
+            margin-bottom:20px;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+        }
+
+        button{
+            width:100%;
+            padding:15px;
+            background:#3b82f6;
+            border:none;
+            border-radius:10px;
+            color:white;
+            font-size:18px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        label{
+            color:white;
+            font-weight:bold;
+            display:block;
+            margin-bottom:8px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="signup-box">
+
+        <h1>Seller Signup</h1>
+
+        <form method="POST"
+              enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <input
+                type="text"
+                name="full_name"
+                placeholder="Full Name"
+                required>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                required>
+
+            <input
+                type="text"
+                name="phone"
+                placeholder="Phone Number"
+                required>
+
+            <input
+                type="text"
+                name="aadhaar"
+                placeholder="Aadhaar Number"
+                required>
+
+            <input
+                type="text"
+                name="address"
+                placeholder="Address"
+                required>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                required>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required>
+
+            <label>
+                Upload Profile Photo
+            </label>
+
+            <input
+                type="file"
+                name="profile_photo"
+                required
+                style="
+                background:white;
+                ">
+
+            <button type="submit">
+                Submit For Approval
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+
 </html>

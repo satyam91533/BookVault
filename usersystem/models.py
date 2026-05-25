@@ -297,6 +297,7 @@ class PaymentSettings(models.Model):
 class SiteSettings(models.Model):
 
     site_logo = models.URLField(
+        upload_to='logos/',
         blank=True,
         null=True
     )
