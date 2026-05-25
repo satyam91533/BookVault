@@ -14,7 +14,8 @@ from usersystem.models import (
     Review,
     WithdrawalRequest,
     SupportMessage,
-    PaymentSettings
+    PaymentSettings,
+    SiteSettings
 )
 
 # ================= HOME =================
@@ -908,6 +909,57 @@ def delete_book(request, id):
     book.delete()
 
     return redirect('/seller-dashboard/')
+# ================= ADMIN LOGO UPLOAD =================
+
+def upload_site_logo(request):
+
+    if not request.user.is_superuser:
+
+        return redirect('/admin/login/')
+
+    settings_obj, created = SiteSettings.objects.get_or_create(
+        id=1
+    )
+
+    if request.method == "POST":
+
+        logo = request.FILES.get(
+            'site_logo'
+        )
+
+        if logo:
+
+            image_data = base64.b64encode(
+                logo.read()
+            )
+
+            response = requests.post(
+
+                "https://api.imgbb.com/1/upload",
+
+                data={
+
+                    "key": settings.IMGBB_API_KEY,
+
+                    "image": image_data
+
+                }
+
+            )
+
+            result = response.json()
+
+            image_url = result['data']['url']
+
+            settings_obj.site_logo = image_url
+
+            settings_obj.save()
+
+    return render(request, 'upload_logo.html', {
+
+        'settings_obj': settings_obj
+
+    })
 
 
 # ================= PRIVACY POLICY =================
@@ -963,20 +1015,25 @@ def support(request):
 
 urlpatterns = [
 
+    path(
+        'admin/upload-logo/',
+        upload_site_logo
+    ),
+
     path('admin/', admin.site.urls),
 
-path('', home),
+    path('', home),
 
-path(
-    'buyer-signup/',
-    buyer_signup
-),
+    path(
+        'buyer-signup/',
+        buyer_signup
+    ),
 
-path('login/', login_view),
+    path('login/', login_view),
 
-path('logout/', logout_view),
+    path('logout/', logout_view),
 
-path('buyer-profile/', buyer_profile),
+    path('buyer-profile/', buyer_profile),
 
     path(
         'edit-buyer-profile/',

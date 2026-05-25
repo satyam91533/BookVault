@@ -290,3 +290,17 @@ class PaymentSettings(models.Model):
     def __str__(self):
 
         return self.admin_upi
+
+
+# ================= SITE SETTINGS =================
+
+class SiteSettings(models.Model):
+
+    site_logo = models.URLField(
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+
+        return "Site Settings"

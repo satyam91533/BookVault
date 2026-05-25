@@ -8,7 +8,8 @@ from .models import (
     Review,
     WithdrawalRequest,
     SupportMessage,
-    PaymentSettings
+    PaymentSettings,
+    SiteSettings
 )
 
 
