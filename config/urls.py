@@ -746,17 +746,35 @@ def seller_dashboard(request):
 
         if withdraw_amount:
 
-            WithdrawalRequest.objects.create(
-
-                seller=seller,
-
-                amount=int(withdraw_amount),
-
-                upi_id=seller.upi_id
-
+            withdraw_amount = int(
+                withdraw_amount
             )
 
-            return redirect('/seller-dashboard/')
+            # ================= CHECK BALANCE =================
+
+            if withdraw_amount > seller.wallet_balance:
+
+                error = "Insufficient wallet balance"
+
+            else:
+
+                WithdrawalRequest.objects.create(
+
+                    seller=seller,
+
+                    amount=withdraw_amount,
+
+                    upi_id=seller.upi_id
+
+                )
+
+                # ================= DEDUCT WALLET =================
+
+                seller.wallet_balance -= withdraw_amount
+
+                seller.save()
+
+                return redirect('/seller-dashboard/')
 
         # ================= SAVE UPI =================
 
