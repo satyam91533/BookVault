@@ -115,7 +115,7 @@ def buyer_signup(request):
 
                 image_data = base64.b64encode(
                     profile_photo.read()
-                )
+                ).decode('utf-8')
 
                 response = requests.post(
 
@@ -184,7 +184,7 @@ def payment_success(request, book_id):
 
         image_data = base64.b64encode(
             payment_screenshot.read()
-        )
+        ).decode('utf-8')
 
         response = requests.post(
 
@@ -292,7 +292,7 @@ def seller_signup(request):
 
                 image_data = base64.b64encode(
                     profile_photo.read()
-                )
+                ).decode('utf-8')
 
                 response = requests.post(
 
@@ -450,7 +450,7 @@ def seller_dashboard(request):
 
                 image_data = base64.b64encode(
                     cover_image.read()
-                )
+                ).decode('utf-8')
 
                 response = requests.post(
 
@@ -623,7 +623,7 @@ def edit_book(request, id):
 
                 image_data = base64.b64encode(
                     cover_image.read()
-                )
+                ).decode('utf-8')
 
                 response = requests.post(
 
@@ -709,7 +709,7 @@ def upload_site_logo(request):
 
             image_data = base64.b64encode(
                 logo.read()
-            )
+            ).decode('utf-8')
 
             response = requests.post(
 
@@ -931,7 +931,7 @@ def edit_buyer_profile(request):
 
             image_data = base64.b64encode(
                 profile_photo.read()
-            )
+            ).decode('utf-8')
 
             response = requests.post(
 
