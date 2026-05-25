@@ -244,11 +244,29 @@
     <div class="navbar">
 
         <a href="/"
-           class="logo">
-           BookVault
+           class="logo"
+           style="
+           display:flex;
+           align-items:center;
+           gap:10px;
+           text-decoration:none;
+           ">
 
-            <img src="https://cdn-icons-png.flaticon.com/512/3145/3145765.png"
-                 style="height:60px;">
+           {% if settings_obj.site_logo %}
+
+           <img src="{{ settings_obj.site_logo.url }}"
+                style="
+                height:60px;
+                width:60px;
+                object-fit:cover;
+                border-radius:12px;
+                ">
+
+           {% endif %}
+
+           <span>
+               BookVault
+           </span>
 
         </a>
 
@@ -286,13 +304,13 @@
 
                 <div style="display:flex; gap:10px;">
 
-    <a href="/seller-login/">
-        Seller Login
-    </a>
+                    <a href="/seller-login/">
+                        Seller Login
+                    </a>
 
-    <a href="/become-seller/">
-        Seller Signup
-    </a>
+                    <a href="/become-seller/">
+                        Seller Signup
+                    </a>
 
 </div>
 

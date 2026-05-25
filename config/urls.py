@@ -22,6 +22,8 @@ from usersystem.models import (
 
 def home(request):
 
+    settings_obj = SiteSettings.objects.first()
+
     search = request.GET.get(
         'search'
     )
@@ -52,7 +54,9 @@ def home(request):
 
     return render(request, 'home.html', {
 
-        'books': books
+        'books': books,
+        
+        'settings_obj': settings_obj,
 
     })
 
