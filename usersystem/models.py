@@ -171,10 +171,9 @@ class Purchase(models.Model):
         null=True
     )
 
-    payment_screenshot = models.ImageField(
-        upload_to='payments/',
-        blank=True,
-        null=True
+    payment_screenshot = models.URLField(
+    blank=True,
+    null=True
     )
 
     reject_reason = models.TextField(
