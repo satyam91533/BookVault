@@ -485,11 +485,11 @@ def download_book(request, id):
 
     purchase.save()
 
-    return FileResponse(
-        purchase.book.pdf_file.open(),
-        as_attachment=True
-    )
+    # REDIRECT TO MEGA PDF LINK
 
+    return redirect(
+        purchase.book.pdf_file
+    )
 
 # ================= SELLER SIGNUP =================
 
