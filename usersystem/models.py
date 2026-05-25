@@ -22,7 +22,8 @@ class Buyer(models.Model):
         null=True
     )
 
-    profile_photo = models.URLField(
+    profile_photo = models.ImageField(
+        upload_to='buyer_profiles/',
         blank=True,
         null=True
     )
@@ -71,7 +72,8 @@ class Seller(models.Model):
         default=False
     )
 
-    profile_photo = models.URLField(
+    profile_photo = models.ImageField(
+        upload_to='seller_profiles/',
         blank=True,
         null=True
     )
@@ -111,7 +113,8 @@ class Book(models.Model):
 
     # COVER IMAGE URL (ImgBB)
 
-    cover_image = models.URLField(
+    cover_image = models.ImageField(
+        upload_to='book_covers/',
         blank=True,
         null=True
     )
@@ -169,7 +172,8 @@ class Purchase(models.Model):
         null=True
     )
 
-    payment_screenshot = models.URLField(
+    payment_screenshot = models.ImageField(
+        upload_to='payments/',
         blank=True,
         null=True
     )
