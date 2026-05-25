@@ -1027,11 +1027,19 @@ def buy_book(request, id):
 
     settings_obj = PaymentSettings.objects.first()
 
+    admin_upi = "mrcb64538@nyes"
+
+    qr_data = f"upi://pay?pa={admin_upi}&pn=BookVault&cu=INR"
+
     return render(request, 'buy_book.html', {
 
         'book': book,
 
-        'settings_obj': settings_obj
+        'settings_obj': settings_obj,
+
+        'admin_upi': admin_upi,
+
+        'qr_data': qr_data
 
     })
 
@@ -1073,7 +1081,6 @@ def download_book(request, id):
     return redirect(
         purchase.book.pdf_file
     )
-
 # ================= URLS =================
 
 urlpatterns = [
