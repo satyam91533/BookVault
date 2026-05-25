@@ -151,7 +151,7 @@
 
             {% if buyer.profile_photo %}
 
-            <img src="{{ buyer.profile_photo.url }}">
+            <img src="{{ buyer.profile_photo }}">
 
             {% else %}
 
@@ -310,7 +310,7 @@
 
                 <div class="purchase-card">
 
-                    <img src="{{ purchase.book.cover_image.url }}">
+                    <img src="{{ purchase.book.cover_image }}">
 
                     <h3 style="
                     margin-top:15px;
