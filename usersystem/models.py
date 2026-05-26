@@ -22,8 +22,7 @@ class Buyer(models.Model):
         null=True
     )
 
-    profile_photo = models.ImageField(
-        upload_to='buyer_profiles/',
+    profile_photo = models.URLField(
         blank=True,
         null=True
     )
@@ -72,8 +71,7 @@ class Seller(models.Model):
         default=False
     )
 
-    profile_photo = models.ImageField(
-        upload_to='seller_profiles/',
+    profile_photo = models.URLField(
         blank=True,
         null=True
     )
