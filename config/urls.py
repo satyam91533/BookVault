@@ -5,6 +5,8 @@ from django.conf.urls.static import static
 
 from django.shortcuts import render, redirect
 
+from django.views.generic import TemplateView
+
 from usersystem.models import (
     Buyer,
     Seller,
@@ -1084,6 +1086,14 @@ def download_book(request, id):
 # ================= URLS =================
 
 urlpatterns = [
+
+    path(
+    "sitemap.xml",
+    TemplateView.as_view(
+        template_name="sitemap.xml",
+        content_type="application/xml"
+    ),
+),
 
     path(
         'admin/upload-logo/',
