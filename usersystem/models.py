@@ -152,7 +152,12 @@ class Purchase(models.Model):
     )
 
     purchase_date = models.DateTimeField(
-        auto_now_add=True
+    auto_now_add=True
+    )
+
+    access_until = models.DateTimeField(
+    null=True,
+    blank=True
     )
 
     payment_approved = models.BooleanField(

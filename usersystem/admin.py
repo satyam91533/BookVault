@@ -72,7 +72,7 @@ class PurchaseAdmin(admin.ModelAdmin):
         'purchase_date',
         'payment_approved',
         'payment_rejected',
-        'download_count'
+        'access_until'
     )
 
     list_editable = (
@@ -98,7 +98,8 @@ class PurchaseAdmin(admin.ModelAdmin):
         'payment_screenshot',
         'utr_number',
         'reject_reason',
-        'download_count'
+        'download_count',
+        'access_until'
     )
 
     def save_model(

@@ -9,6 +9,10 @@ from django.views.generic import TemplateView
 
 import feedparser
 
+from django.utils import timezone
+
+from datetime import timedelta
+
 from usersystem.models import (
     Buyer,
     Seller,
@@ -259,7 +263,9 @@ def payment_success(request, book_id):
 
             payment_screenshot=image_url,
 
-            payment_approved=False
+            payment_approved=False,
+
+            access_until=timezone.now() + timedelta(days=30),
 
         )
 
@@ -1111,17 +1117,6 @@ def download_book(request, id):
             request,
             'payment_pending.html'
         )
-
-    if purchase.download_count >= 3:
-
-        return render(
-            request,
-            'download_limit.html'
-        )
-
-    purchase.download_count += 1
-
-    purchase.save()
 
     return redirect(
         purchase.book.pdf_file

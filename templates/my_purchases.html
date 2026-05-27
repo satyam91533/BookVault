@@ -52,11 +52,6 @@
             margin-top:15px;
         }
 
-        .downloads{
-            margin-top:10px;
-            color:#cbd5e1;
-        }
-
         .btn{
             display:inline-block;
             margin-top:15px;
@@ -136,53 +131,20 @@
                     Payment Approved ✅
                 </p>
 
-                <p class="downloads">
-                    Downloads Used:
-                    {{ purchase.download_count }}/3
-                </p>
-
                 <p style="
                 color:#f59e0b;
-                margin-top:8px;
-                font-size:14px;
-                ">
-                    Remaining Downloads:
-
-                    {% if purchase.download_count == 0 %}
-                        3
-
-                    {% elif purchase.download_count == 1 %}
-                        2
-
-                    {% elif purchase.download_count == 2 %}
-                        1
-
-                    {% else %}
-                        0
-                    {% endif %}
-
-                </p>
-
-                {% if purchase.download_count < 3 %}
-
-                <a href="/download-book/{{ purchase.id }}/"
-                   class="btn">
-                    Download PDF
-                </a>
-
-                {% else %}
-
-                <p style="
-                background:#ef4444;
-                padding:10px;
-                border-radius:8px;
-                margin-top:15px;
+                margin-top:10px;
+                font-size:15px;
                 font-weight:bold;
                 ">
-                    Download Limit Reached ❌
+                    Access Valid Till:
+                    {{ purchase.access_until }}
                 </p>
 
-                {% endif %}
+                <a href="/download-book/{{ purchase.id }}/"
+                    class="btn">
+                    Download PDF
+                </a>
 
                 {% elif purchase.payment_rejected %}
 
