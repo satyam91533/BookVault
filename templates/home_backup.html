@@ -344,270 +344,153 @@ crossorigin="anonymous"></script>
 
     </div>
 
-    <!-- NEWS SECTION -->
+    <div class="category-bar">
 
-<section style="
-width:90%;
-margin:auto;
-margin-top:40px;
-margin-bottom:70px;
-">
+        <a href="/">
+            All
+        </a>
 
-    <div style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:30px;
-    flex-wrap:wrap;
-    gap:20px;
-    ">
+        <a href="/?category=Programming">
+            Programming
+        </a>
 
-        <h1 style="
-        font-size:40px;
-        color:#f59e0b;
-        ">
+        <a href="/?category=Finance">
+            Finance
+        </a>
 
-            📰 Latest Articles & News
+        <a href="/?category=Business">
+            Business
+        </a>
 
-        </h1>
-
-        <a href="/news/"
-           style="
-           background:#f59e0b;
-           color:black;
-           padding:12px 20px;
-           border-radius:12px;
-           text-decoration:none;
-           font-weight:bold;
-           ">
-
-            View All News →
-
+        <a href="/?category=Marketing">
+            Marketing
         </a>
 
     </div>
 
-    <div style="
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:30px;
-    ">
+    <!-- SEARCH BAR -->
 
-        <div style="
-        background:#1e293b;
-        border-radius:20px;
-        overflow:hidden;
-        ">
+<form method="GET"
+      style="
+      margin-bottom:40px;
+      display:flex;
+      gap:15px;
+      flex-wrap:wrap;
+      ">
 
-            <img src="https://picsum.photos/600/400?1"
-                 style="
-                 width:100%;
-                 height:220px;
-                 object-fit:cover;
-                 ">
-
-            <div style="padding:25px;">
-
-                <h2 style="
-                font-size:24px;
-                line-height:1.6;
-                margin-bottom:20px;
-                ">
-
-                    Best AI Books To Read In 2026
-
-                </h2>
-
-                <a href="/news/"
-                   style="
-                   display:inline-block;
-                   background:#22c55e;
-                   color:white;
-                   text-decoration:none;
-                   padding:12px 20px;
-                   border-radius:10px;
-                   font-weight:bold;
-                   ">
-
-                    Read More
-
-                </a>
-
-            </div>
-
-        </div>
-
-        <div style="
-        background:#1e293b;
-        border-radius:20px;
-        overflow:hidden;
-        ">
-
-            <img src="https://picsum.photos/600/400?2"
-                 style="
-                 width:100%;
-                 height:220px;
-                 object-fit:cover;
-                 ">
-
-            <div style="padding:25px;">
-
-                <h2 style="
-                font-size:24px;
-                line-height:1.6;
-                margin-bottom:20px;
-                ">
-
-                    Top Programming Books Trending This Week
-
-                </h2>
-
-                <a href="/news/"
-                   style="
-                   display:inline-block;
-                   background:#22c55e;
-                   color:white;
-                   text-decoration:none;
-                   padding:12px 20px;
-                   border-radius:10px;
-                   font-weight:bold;
-                   ">
-
-                    Read More
-
-                </a>
-
-            </div>
-
-        </div>
-
-        <div style="
-        background:#1e293b;
-        border-radius:20px;
-        overflow:hidden;
-        ">
-
-            <img src="https://picsum.photos/600/400?3"
-                 style="
-                 width:100%;
-                 height:220px;
-                 object-fit:cover;
-                 ">
-
-            <div style="padding:25px;">
-
-                <h2 style="
-                font-size:24px;
-                line-height:1.6;
-                margin-bottom:20px;
-                ">
-
-                    New Educational Ebook Releases
-
-                </h2>
-
-                <a href="/news/"
-                   style="
-                   display:inline-block;
-                   background:#22c55e;
-                   color:white;
-                   text-decoration:none;
-                   padding:12px 20px;
-                   border-radius:10px;
-                   font-weight:bold;
-                   ">
-
-                    Read More
-
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- TOP SELLING BOOKS -->
-
-<section style="
-width:90%;
-margin:auto;
-margin-bottom:80px;
-">
-
-    <div style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:30px;
-    flex-wrap:wrap;
-    gap:20px;
-    ">
-
-        <h1 style="
-        font-size:40px;
-        color:#22c55e;
-        ">
-
-            🔥 Top Selling Books
-
-        </h1>
-
-        <a href="/explore-books/"
+    <input type="text"
+           name="search"
+           placeholder="Search books..."
+           value="{{ request.GET.search }}"
            style="
-           background:#22c55e;
-           color:white;
-           padding:12px 20px;
-           border-radius:12px;
-           text-decoration:none;
-           font-weight:bold;
+           flex:1;
+           min-width:250px;
+           padding:15px;
+           border:none;
+           border-radius:10px;
+           font-size:16px;
            ">
 
-            Explore Books →
+    <select name="category"
+            style="
+            padding:15px;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+            ">
 
-        </a>
+        <option value="">
+            All Categories
+        </option>
 
-    </div>
+        <option value="Programming">
+            Programming
+        </option>
 
-    <div class="books-container">
+        <option value="AI & ML">
+            AI & ML
+        </option>
 
-        {% for book in books %}
+        <option value="Business">
+            Business
+        </option>
 
-        <div class="book-card">
+        <option value="Finance">
+            Finance
+        </option>
 
-            <img src="{{ book.cover_image }}"
-                 class="book-image">
+        <option value="Education">
+            Education
+        </option>
 
-            <div class="book-content">
+        <option value="Motivation">
+            Motivation
+        </option>
 
-                <div class="book-title">
-                    {{ book.title }}
-                </div>
+    </select>
 
-                <div class="book-category">
-                    {{ book.category }}
-                </div>
+    <button type="submit"
+            style="
+            padding:15px 25px;
+            background:#22c55e;
+            color:white;
+            border:none;
+            border-radius:10px;
+            font-weight:bold;
+            cursor:pointer;
+            ">
+        Search
+    </button>
 
-                <div class="book-price">
-                    ₹{{ book.price }}
-                </div>
+</form>
 
-                <a href="/book-details/{{ book.id }}/"
-                   class="book-btn">
-                    View Details
-                </a>
 
+<div class="books-container">
+
+    {% for book in books %}
+
+    <div class="book-card">
+
+        <img src="{{ book.cover_image }}"
+             class="book-image">
+
+        <div class="book-content">
+
+            <div class="book-title">
+                {{ book.title }}
             </div>
+
+            <div class="book-category">
+                {{ book.category }}
+            </div>
+
+            <div class="book-price">
+                ₹{{ book.price }}
+            </div>
+
+            <a href="/book-details/{{ book.id }}/"
+               class="book-btn">
+                View Details
+            </a>
 
         </div>
 
-        {% endfor %}
-
     </div>
 
-</section>
+    {% empty %}
+
+    <h2 style="
+    text-align:center;
+    width:100%;
+    color:#f59e0b;
+    margin-top:40px;
+    ">
+        No Books Found
+    </h2>
+
+    {% endfor %}
+
+</div>
 
 <!-- ================= ABOUT US ================= -->
 

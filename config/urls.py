@@ -7,6 +7,8 @@ from django.shortcuts import render, redirect
 
 from django.views.generic import TemplateView
 
+import feedparser
+
 from usersystem.models import (
     Buyer,
     Seller,
@@ -22,6 +24,25 @@ from usersystem.models import (
 # ================= HOME =================
 
 def home(request):
+
+    settings_obj = SiteSettings.objects.first()
+
+    books = Book.objects.filter(
+        approved=True
+    ).order_by('-id')[:6]
+
+    return render(request, 'home.html', {
+
+        'books': books,
+
+        'settings_obj': settings_obj,
+
+    })
+
+
+# ================= EXPLORE BOOKS =================
+
+def explore_books(request):
 
     settings_obj = SiteSettings.objects.first()
 
@@ -53,11 +74,33 @@ def home(request):
             category=category
         )
 
-    return render(request, 'home.html', {
+    return render(request, 'explore_books.html', {
 
         'books': books,
         
         'settings_obj': settings_obj,
+
+    })
+
+# ================= NEWS PAGE =================
+
+def news_page(request):
+
+    feed = feedparser.parse(
+
+        "https://news.google.com/rss/search?q=books"
+
+    )
+
+    articles = feed.entries[:12]
+
+    settings_obj = SiteSettings.objects.first()
+
+    return render(request, 'news.html', {
+
+        'articles': articles,
+
+        'settings_obj': settings_obj
 
     })
 
@@ -1111,6 +1154,16 @@ path(
     path('admin/', admin.site.urls),
 
     path('', home),
+
+    path(
+    'explore-books/',
+    explore_books
+),
+
+    path(
+    'news/',
+    news_page
+),
 
     path(
         'buyer-signup/',
