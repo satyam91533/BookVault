@@ -10,6 +10,8 @@ crossorigin="anonymous"></script>
 
 <title>BookVault</title>
 
+<meta http-equiv="refresh" content="300">
+
 <style>
 
     *{
@@ -344,6 +346,42 @@ crossorigin="anonymous"></script>
 
     </div>
 
+    <div style="
+background:#1e293b;
+padding:20px;
+margin:30px auto;
+width:90%;
+border-radius:15px;
+">
+
+<marquee scrollamount="8">
+
+{% for article in latest_news %}
+
+🔥 {{ article.title }}
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+{% endfor %}
+
+</marquee>
+
+</div>
+
+<div style="
+width:90%;
+margin:20px auto;
+background:#1e293b;
+padding:20px;
+border-radius:15px;
+text-align:center;
+">
+
+Adsense Ad Space
+
+</div>
+
+
     <!-- NEWS SECTION -->
 
 <section style="
@@ -393,13 +431,15 @@ margin-bottom:70px;
     gap:30px;
     ">
 
+        {% for article in latest_news %}
+
         <div style="
         background:#1e293b;
         border-radius:20px;
         overflow:hidden;
         ">
 
-            <img src="https://picsum.photos/600/400?1"
+            <img src="https://picsum.photos/600/400?random={{ forloop.counter }}"
                  style="
                  width:100%;
                  height:220px;
@@ -409,25 +449,28 @@ margin-bottom:70px;
             <div style="padding:25px;">
 
                 <h2 style="
-                font-size:24px;
+                font-size:22px;
                 line-height:1.6;
-                margin-bottom:20px;
+                margin-bottom:15px;
                 ">
 
-                    Best AI Books To Read In 2026
+                    {{ article.title }}
 
                 </h2>
 
-                <a href="/news/"
-                   style="
-                   display:inline-block;
-                   background:#22c55e;
-                   color:white;
-                   text-decoration:none;
-                   padding:12px 20px;
-                   border-radius:10px;
-                   font-weight:bold;
-                   ">
+                <p style="
+                color:#cbd5e1;
+                line-height:1.8;
+                margin-bottom:20px;
+                ">
+
+                    {{ article.summary|striptags|truncatechars:120 }}
+
+                </p>
+
+                <a href="{{ article.link }}"
+                   target="_blank"
+                   class="book-btn">
 
                     Read More
 
@@ -436,94 +479,21 @@ margin-bottom:70px;
             </div>
 
         </div>
+
+        {% empty %}
 
         <div style="
         background:#1e293b;
+        padding:30px;
         border-radius:20px;
-        overflow:hidden;
+        text-align:center;
         ">
 
-            <img src="https://picsum.photos/600/400?2"
-                 style="
-                 width:100%;
-                 height:220px;
-                 object-fit:cover;
-                 ">
-
-            <div style="padding:25px;">
-
-                <h2 style="
-                font-size:24px;
-                line-height:1.6;
-                margin-bottom:20px;
-                ">
-
-                    Top Programming Books Trending This Week
-
-                </h2>
-
-                <a href="/news/"
-                   style="
-                   display:inline-block;
-                   background:#22c55e;
-                   color:white;
-                   text-decoration:none;
-                   padding:12px 20px;
-                   border-radius:10px;
-                   font-weight:bold;
-                   ">
-
-                    Read More
-
-                </a>
-
-            </div>
+            No News Available
 
         </div>
 
-        <div style="
-        background:#1e293b;
-        border-radius:20px;
-        overflow:hidden;
-        ">
-
-            <img src="https://picsum.photos/600/400?3"
-                 style="
-                 width:100%;
-                 height:220px;
-                 object-fit:cover;
-                 ">
-
-            <div style="padding:25px;">
-
-                <h2 style="
-                font-size:24px;
-                line-height:1.6;
-                margin-bottom:20px;
-                ">
-
-                    New Educational Ebook Releases
-
-                </h2>
-
-                <a href="/news/"
-                   style="
-                   display:inline-block;
-                   background:#22c55e;
-                   color:white;
-                   text-decoration:none;
-                   padding:12px 20px;
-                   border-radius:10px;
-                   font-weight:bold;
-                   ">
-
-                    Read More
-
-                </a>
-
-            </div>
-
-        </div>
+        {% endfor %}
 
     </div>
 

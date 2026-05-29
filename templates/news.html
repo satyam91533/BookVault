@@ -7,6 +7,11 @@
         Latest News | BookVault
     </title>
 
+    <meta http-equiv="refresh" content="60">
+
+    <meta name="description"
+          content="Latest book news, AI news, programming updates, finance, business and education articles.">
+
     <style>
 
         *{
@@ -69,6 +74,28 @@
             font-size:20px;
         }
 
+        .breaking-news{
+            width:90%;
+            margin:auto;
+            margin-bottom:25px;
+            background:#ef4444;
+            padding:15px;
+            border-radius:12px;
+            text-align:center;
+            font-weight:bold;
+            font-size:18px;
+        }
+
+        .category-bar{
+            width:90%;
+            margin:auto;
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+            justify-content:center;
+            margin-bottom:30px;
+        }
+
         .news-container{
             width:90%;
             margin:auto;
@@ -108,6 +135,12 @@
 
         .news-source{
             color:#94a3b8;
+            margin-bottom:15px;
+        }
+
+        .news-summary{
+            color:#cbd5e1;
+            line-height:1.8;
             margin-bottom:20px;
         }
 
@@ -124,6 +157,17 @@
 
         .read-btn:hover{
             background:white;
+        }
+
+        .ads-box{
+            width:90%;
+            margin:auto;
+            margin-bottom:35px;
+            background:#1e293b;
+            border-radius:15px;
+            padding:20px;
+            text-align:center;
+            color:#94a3b8;
         }
 
     </style>
@@ -171,6 +215,113 @@
 
     </div>
 
+    <div class="breaking-news">
+
+        🚨 Breaking News • Auto Updated Every Minute
+
+    </div>
+
+    <div class="category-bar">
+
+        <a href="/news/?category=books" class="read-btn">
+            📚 Books
+        </a>
+
+        <a href="/news/?category=ai" class="read-btn">
+            🤖 AI
+        </a>
+
+        <a href="/news/?category=programming" class="read-btn">
+            💻 Programming
+        </a>
+
+        <a href="/news/?category=business" class="read-btn">
+            📈 Business
+        </a>
+
+        <a href="/news/?category=finance" class="read-btn">
+            💰 Finance
+        </a>
+
+        <a href="/news/?category=technology" class="read-btn">
+            🚀 Technology
+        </a>
+
+        <a href="/news/?category=education" class="read-btn">
+            🎓 Education
+        </a>
+
+    </div>
+
+    <form method="GET"
+      style="
+      width:90%;
+      margin:auto;
+      margin-bottom:30px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      ">
+
+    <input type="text"
+           name="search"
+           placeholder="Search News..."
+           value="{{ request.GET.search }}"
+           style="
+           flex:1;
+           padding:15px;
+           border:none;
+           border-radius:10px;
+           ">
+
+    <button type="submit"
+            class="read-btn">
+        Search
+    </button>
+
+</form>
+
+    <div style="
+        width:90%;
+        margin:auto;
+        margin-bottom:40px;
+        background:#1e293b;
+        padding:25px;
+        border-radius:20px;
+        ">
+
+        <h2 style="
+        color:#22c55e;
+        margin-bottom:15px;
+        ">
+
+🔥 Trending News
+
+    </h2>
+
+    <marquee
+        behavior="scroll"
+        direction="left"
+        scrollamount="8">
+
+        {% for article in articles %}
+
+        {{ article.title }} 🔥🔥🔥
+
+        &nbsp;&nbsp;&nbsp;&nbsp;
+
+        {% endfor %}
+
+    </marquee>
+
+    </div>
+
+    <div class="ads-box">
+
+        Adsense Ad Space
+
+    </div>
+
     <div class="news-container">
 
         {% for article in articles %}
@@ -187,14 +338,21 @@
                 </div>
 
                 <div class="news-source">
-                    {{ article.published }}
+                    🕒 {{ article.published }}
+                </div>
+
+                <div class="news-summary">
+
+                    {{ article.summary|striptags|truncatechars:180 }}
+
                 </div>
 
                 <a href="{{ article.link }}"
                    target="_blank"
+                   rel="noopener noreferrer"
                    class="read-btn">
 
-                    Read More
+                    Read More →
 
                 </a>
 

@@ -35,14 +35,21 @@ def home(request):
         approved=True
     ).order_by('-id')[:6]
 
+    feed = feedparser.parse(
+        "https://news.google.com/rss/search?q=books"
+    )
+
+    latest_news = feed.entries[:6]
+
     return render(request, 'home.html', {
 
         'books': books,
 
+        'latest_news': latest_news,
+
         'settings_obj': settings_obj,
 
     })
-
 
 # ================= EXPLORE BOOKS =================
 
@@ -90,23 +97,64 @@ def explore_books(request):
 
 def news_page(request):
 
-    feed = feedparser.parse(
-
-        "https://news.google.com/rss/search?q=books"
-
+    category = request.GET.get(
+        'category',
+        'books'
     )
 
-    articles = feed.entries[:12]
+    rss_feeds = {
+
+        'books':
+        'https://news.google.com/rss/search?q=books',
+
+        'ai':
+        'https://news.google.com/rss/search?q=artificial+intelligence',
+
+        'programming':
+        'https://news.google.com/rss/search?q=programming',
+
+        'business':
+        'https://news.google.com/rss/search?q=business',
+
+        'finance':
+        'https://news.google.com/rss/search?q=finance',
+
+        'technology':
+        'https://news.google.com/rss/search?q=technology',
+
+        'education':
+        'https://news.google.com/rss/search?q=education'
+
+    }
+
+    feed = feedparser.parse(
+        rss_feeds.get(
+            category,
+            rss_feeds['books']
+        )
+    )
+
+    articles = feed.entries[:24]
 
     settings_obj = SiteSettings.objects.first()
 
-    return render(request, 'news.html', {
+    return render(
 
-        'articles': articles,
+        request,
 
-        'settings_obj': settings_obj
+        'news.html',
 
-    })
+        {
+
+            'articles': articles,
+
+            'settings_obj': settings_obj,
+
+            'selected_category': category
+
+        }
+
+    )
 
 # ================= BUYER SIGNUP =================
 
